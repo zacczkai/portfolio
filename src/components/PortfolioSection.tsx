@@ -1,0 +1,134 @@
+"use client";
+
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
+
+export interface Project {
+  id: string;
+  title: string;
+  image: string; // The user will place images in /public/images/
+  description?: string;
+  videoUrl?: string; // YouTube URL if any
+}
+
+interface PortfolioSectionProps {
+  title: string;
+  description?: string;
+  projects: Project[];
+}
+
+export default function PortfolioSection({ title, description, projects }: PortfolioSectionProps) {
+  const { t } = useLanguage();
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  const selectedProject = projects.find((p) => p.id === selectedId);
+
+  return (
+    <section className="py-16 px-4 max-w-6xl mx-auto w-full">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        className="mb-8"
+      >
+        <h2 className="text-3xl md:text-4xl font-bold mb-2">
+          {title}
+        </h2>
+        {description && <p className="text-gray-400 text-lg">{description}</p>}
+      </motion.div>
+
+      {/* Carousel */}
+      <div className="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory scrollbar-hide">
+        {projects.map((project) => (
+          <motion.div
+            layoutId={`card-${project.id}`}
+            key={project.id}
+            onClick={() => setSelectedId(project.id)}
+            className="relative flex-shrink-0 w-72 md:w-80 h-96 rounded-2xl overflow-hidden cursor-pointer snap-center group border border-zinc-800 bg-zinc-900"
+          >
+            {/* Image Placeholder or Actual Image */}
+            <div className="absolute inset-0 bg-zinc-800 flex items-center justify-center">
+               <img 
+                 src={project.image} 
+                 alt={project.title} 
+                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                 onError={(e) => {
+                   (e.target as HTMLImageElement).src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%2327272a" /><text x="50%" y="50%" font-family="Arial" font-size="6" fill="%2371717a" text-anchor="middle" dominant-baseline="middle">[ Imagem: ${project.image} ]</text></svg>';
+                 }}
+               />
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+            <motion.div className="absolute bottom-0 left-0 p-6 w-full">
+              <h3 className="text-xl font-bold text-white mb-1 group-hover:text-purple-400 transition-colors">
+                {project.title}
+              </h3>
+              <p className="text-xs text-zinc-300 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0">
+                {t.sections.clickToExpand}
+              </p>
+            </motion.div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Expanded Modal */}
+      <AnimatePresence>
+        {selectedId && selectedProject && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedId(null)}
+              className="fixed inset-0 bg-black/80 z-50 backdrop-blur-sm cursor-pointer"
+            />
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+              <motion.div
+                layoutId={`card-${selectedProject.id}`}
+                className="bg-zinc-900 w-full max-w-4xl max-h-[90vh] rounded-2xl overflow-y-auto pointer-events-auto shadow-2xl border border-zinc-800 flex flex-col md:flex-row relative"
+              >
+                <button
+                  onClick={() => setSelectedId(null)}
+                  className="absolute top-4 right-4 z-10 p-2 bg-black/50 hover:bg-purple-900 text-white rounded-full transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+
+                <div className="md:w-1/2 min-h-[300px] bg-zinc-800 relative">
+                  <img 
+                    src={selectedProject.image} 
+                    alt={selectedProject.title} 
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%2327272a" /><text x="50%" y="50%" font-family="Arial" font-size="6" fill="%2371717a" text-anchor="middle" dominant-baseline="middle">[ Imagem: ${selectedProject.image} ]</text></svg>';
+                    }}
+                  />
+                </div>
+                
+                <div className="p-8 md:w-1/2 flex flex-col justify-center">
+                  <h3 className="text-3xl font-bold mb-4 text-purple-400">
+                    {selectedProject.title}
+                  </h3>
+                  {selectedProject.description && (
+                    <p className="text-zinc-300 leading-relaxed mb-6">
+                      {selectedProject.description}
+                    </p>
+                  )}
+                  {selectedProject.videoUrl && (
+                    <div className="mt-4">
+                       <p className="text-sm text-zinc-500 mb-2">Link do vídeo:</p>
+                       <a href={selectedProject.videoUrl} target="_blank" rel="noreferrer" className="text-purple-400 underline break-all">
+                         {selectedProject.videoUrl}
+                       </a>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            </div>
+          </>
+        )}
+      </AnimatePresence>
+    </section>
+  );
+}

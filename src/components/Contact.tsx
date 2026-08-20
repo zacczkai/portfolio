@@ -2,8 +2,11 @@
 
 import { motion } from "framer-motion";
 import { Mail, Globe, Link as LinkIcon } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function Contact() {
+  const { t } = useLanguage();
+
   return (
     <footer className="py-24 px-4 border-t border-zinc-900 bg-black relative overflow-hidden">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-purple-900 to-transparent opacity-50" />
@@ -15,7 +18,7 @@ export default function Contact() {
           viewport={{ once: true }}
           className="text-3xl md:text-5xl font-bold mb-8"
         >
-          Vamos trabalhar <span className="text-purple-500">juntos?</span>
+          {t.contact.title1} <span className="text-purple-500">{t.contact.title2}</span>
         </motion.h2>
         
         <motion.div 
@@ -37,7 +40,7 @@ export default function Contact() {
         </motion.div>
 
         <p className="mt-12 text-zinc-600 text-sm">
-          © {new Date().getFullYear()} Seu Nome. Todos os direitos reservados.
+          © {new Date().getFullYear()} Seu Nome. {t.contact.rights}
         </p>
       </div>
     </footer>

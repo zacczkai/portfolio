@@ -1,8 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function About() {
+  const { t } = useLanguage();
+
   return (
     <section className="py-24 px-4 max-w-5xl mx-auto">
       <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -13,13 +16,13 @@ export default function About() {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-3xl md:text-5xl font-bold mb-6">
-            Quem <span className="text-purple-500">sou eu</span>
+            {t.about.title1} <span className="text-purple-500">{t.about.title2}</span>
           </h2>
           <p className="text-gray-400 text-lg mb-4">
-            Sou um profissional de Publicidade e Propaganda apaixonado por estratégia e execução. Meu objetivo é ajudar marcas a encontrarem sua voz e se destacarem em um mercado competitivo.
+            {t.about.p1}
           </p>
           <p className="text-gray-400 text-lg">
-            Com experiência em campanhas digitais, direção de arte e branding, acredito que a clareza é a ferramenta mais poderosa na comunicação.
+            {t.about.p2}
           </p>
         </motion.div>
 

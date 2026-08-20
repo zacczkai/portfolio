@@ -33,3 +33,14 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #7e22ce; /* tailwind purple-700 */
 }
+
+/* Hide scrollbar for carousel but keep functionality */
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}

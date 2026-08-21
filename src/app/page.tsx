@@ -12,9 +12,36 @@ export default function Home() {
 
   // Mock data for the sections
   const datasComemorativas: Project[] = [
-    { id: "dc1", title: "Campanha Dia das Mães", image: "/images/dc1.jpg", description: "Post comemorativo para o Dia das Mães com foco emocional." },
-    { id: "dc2", title: "Post Natal", image: "/images/dc2.jpg", description: "Design temático de natal para redes sociais." },
-    { id: "dc3", title: "Dia do Consumidor", image: "/images/dc3.jpg", description: "Promoção especial de dia do consumidor." },
+    { 
+      id: "dc1", 
+      title: "Halloween: O Verdadeiro Medo", 
+      image: "/images/halloween.png", 
+      description: (
+        <>
+          <p><strong>Conceito:</strong> Fuga do clichê comemorativo. O objetivo foi aproveitar a estética da data para engajar o público com o core business da marca (previdência), transformando a falta de planejamento financeiro no verdadeiro "monstro" a ser evitado.</p>
+        </>
+      ) 
+    },
+    { 
+      id: "dc2", 
+      title: "Dia dos Pais: Composição e Profundidade", 
+      image: "/images/dia dos pais noise.png", 
+      description: (
+        <>
+          <p><strong>Execução:</strong> Foco em layout e manipulação de imagem. Utilização de máscaras de recorte na tipografia e separação de planos para criar uma peça institucional limpa, equilibrada e que transmite acolhimento.</p>
+        </>
+      ) 
+    },
+    { 
+      id: "dc3", 
+      title: "Dia das Crianças: Educação e Conscientização", 
+      image: "/images/post dia das crianças.png", 
+      description: (
+        <>
+          <p><strong>Conceito:</strong> Uma abordagem tática que une a data comemorativa ao pilar educacional da instituição. Em vez de uma simples parabenização, a peça utiliza uma linguagem visual direta e acessível para provocar uma reflexão nos pais sobre a importância de introduzir a educação financeira desde a infância. O layout foi construído para priorizar a clareza da mensagem e a legibilidade no feed.</p>
+        </>
+      ) 
+    },
   ];
 
   const carrossel: Project[] = [
@@ -24,16 +51,15 @@ export default function Home() {
   ];
 
   const videos: Project[] = [
-    { id: "vid1", title: "Cobertura Expo 2026", image: "/images/vid1.jpg", description: "Aftermovie do evento principal da empresa.", videoUrl: "https://youtube.com/..." },
-    { id: "vid2", title: "Entrevistas Bastidores", image: "/images/vid2.jpg", description: "Reels cobrindo os bastidores da feira.", videoUrl: "https://youtube.com/..." },
-    { id: "vid3", title: "Teaser Palestra", image: "/images/vid3.jpg", description: "Vídeo curto chamando para o palco principal.", videoUrl: "https://youtube.com/..." },
+    { id: "vid1", title: "Cobertura Expo 2026", image: "/images/vid1.jpg", description: "Aftermovie do evento principal da empresa.", videoUrl: "https://youtu.be/EWkf893ZfOM" },
+    { id: "vid2", title: "Entrevistas Bastidores", image: "/images/vid2.jpg", description: "Reels cobrindo os bastidores da feira.", videoUrl: "https://youtu.be/TL-fPjRIhWk" },
+    { id: "vid3", title: "Teaser Palestra", image: "/images/vid3.jpg", description: "Vídeo curto chamando para o palco principal.", videoUrl: "https://youtu.be/ZmBwy3QiHJs" },
   ];
 
   const projetosPessoais: Project[] = [
     { 
       id: "pp1", 
       title: "Across the Spider-Verse: Frenesi e Dualidade", 
-      image: "/images/spider.jpg", 
       videoUrl: "https://youtu.be/EWkf893ZfOM",
       description: (
         <>
@@ -47,7 +73,6 @@ export default function Home() {
     { 
       id: "pp2", 
       title: "La La Land: A Estética da Melancolia", 
-      image: "/images/lalaland.jpg", 
       videoUrl: "https://youtu.be/TL-fPjRIhWk",
       description: (
         <>
@@ -61,8 +86,8 @@ export default function Home() {
     { 
       id: "pp3", 
       title: "Manga Motion: Parallax & Ironia Narrativa", 
-      image: "/images/naruto.jpg", 
-      videoUrl: "",
+      videoUrl: "https://youtu.be/ey7NhBkqtCA",
+      isVertical: true,
       description: (
         <>
           <p><strong>Softwares utilizados:</strong> Photoshop e After Effects.</p>
@@ -75,24 +100,12 @@ export default function Home() {
     { 
       id: "pp4", 
       title: "Fight Club: O Peso da Projeção", 
-      image: "/images/fightclub.jpg", 
       videoUrl: "https://youtu.be/ZmBwy3QiHJs",
       description: (
         <>
           <p><strong>Softwares utilizados:</strong> After Effects e Magic Bullet Looks.</p>
           <p><strong>O Projeto:</strong> Uma peça conceitual e mais crua, sobre a incapacidade de alcançar as próprias expectativas. O foco não era a complexidade de cortes rápidos, mas sim a construção de uma atmosfera psicológica pesada, revelando a figura de Tyler Durden exatamente pelo que ele é: uma ilusão sintomática da mente do protagonista.</p>
           <p><strong>Processo Criativo & Execução Técnica:</strong> Para reforçar a sensação de irrealidade, o tratamento de cor e luz abusou da difusão, mantendo a estética onírica (dreamy) para isolar o personagem principal de seu ambiente. A estabilidade visual é quebrada propositalmente durante o refrão da faixa "Creep", utilizando motion tracking alinhado a efeitos de glitch desenhados para simbolizar a ruptura mental e a falha na projeção de identidade. Mesmo sendo uma peça mais densa e conceitual, a narrativa visual capturou a atenção de 1.185 espectadores.</p>
-        </>
-      )
-    },
-    { 
-      id: "pp5", 
-      title: "Joker Project", 
-      image: "/images/joker.jpg", 
-      videoUrl: "https://youtu.be/qWwFZcJ7QGQ",
-      description: (
-        <>
-          <p><strong>O Projeto:</strong> Trabalho de experimentação narrativa e visual utilizando recortes de Joker.</p>
         </>
       )
     }

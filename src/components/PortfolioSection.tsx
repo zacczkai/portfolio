@@ -2,13 +2,15 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import useEmblaCarousel from "embla-carousel-react";
 
 export interface Project {
   id: string;
   title: string;
-  image: string;
+  image?: string;
   description?: React.ReactNode | string;
   videoUrl?: string;
+  isVertical?: boolean;
 }
 
 interface PortfolioSectionProps {
@@ -20,6 +22,10 @@ interface PortfolioSectionProps {
 export default function PortfolioSection({ title, description, projects }: PortfolioSectionProps) {
   const { t } = useLanguage();
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [emblaRef] = useEmblaCarousel({ 
+    dragFree: true,
+    containScroll: "trimSnaps"
+  });
 
   const selectedProject = projects.find((p) => p.id === selectedId);
 
@@ -30,10 +36,16 @@ export default function PortfolioSection({ title, description, projects }: Portf
     return match ? match[1] : null;
   };
 
+  const getThumbnail = (project: Project) => {
+    if (project.image) return project.image;
+    const id = getYouTubeId(project.videoUrl);
+    return id ? `https://img.youtube.com/vi/${id}/maxresdefault.jpg` : "";
+  };
+
   const selectedVideoId = getYouTubeId(selectedProject?.videoUrl);
 
   return (
-    <section className="py-16 px-4 max-w-6xl mx-auto w-full">
+    <section className="py-16 px-4 max-w-6xl mx-auto w-full overflow-hidden">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -46,37 +58,39 @@ export default function PortfolioSection({ title, description, projects }: Portf
         {description && <div className="text-gray-400 text-lg leading-relaxed">{description}</div>}
       </motion.div>
 
-      {/* Carousel */}
-      <div className="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory scrollbar-hide">
-        {projects.map((project) => (
-          <motion.div
-            layoutId={`card-${project.id}`}
-            key={project.id}
-            onClick={() => setSelectedId(project.id)}
-            className="relative flex-shrink-0 w-72 md:w-80 h-96 rounded-2xl overflow-hidden cursor-pointer snap-center group border border-zinc-800 bg-zinc-900"
-          >
-            {/* Image Placeholder or Actual Image */}
-            <div className="absolute inset-0 bg-zinc-800 flex items-center justify-center">
-               <img 
-                 src={project.image} 
-                 alt={project.title} 
-                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                 onError={(e) => {
-                   (e.target as HTMLImageElement).src = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%2327272a" /><text x="50%" y="50%" font-family="Arial" font-size="6" fill="%2371717a" text-anchor="middle" dominant-baseline="middle">[ Imagem: ${project.image} ]</text></svg>`;
-                 }}
-               />
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-            <motion.div className="absolute bottom-0 left-0 p-6 w-full">
-              <h3 className="text-xl font-bold text-white mb-1 group-hover:text-purple-400 transition-colors">
-                {project.title}
-              </h3>
-              <p className="text-xs text-zinc-300 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0">
-                {t.sections.clickToExpand}
-              </p>
+      {/* Embla Carousel */}
+      <div className="overflow-hidden pb-8 cursor-grab active:cursor-grabbing" ref={emblaRef}>
+        <div className="flex gap-6">
+          {projects.map((project) => (
+            <motion.div
+              layoutId={`card-${project.id}`}
+              key={project.id}
+              onClick={() => setSelectedId(project.id)}
+              className="relative flex-shrink-0 w-72 md:w-80 h-96 rounded-2xl overflow-hidden cursor-pointer group border border-zinc-800 bg-zinc-900 select-none"
+            >
+              {/* Image / YouTube Thumbnail */}
+              <div className="absolute inset-0 bg-zinc-800 flex items-center justify-center">
+                 <img 
+                   src={getThumbnail(project)} 
+                   alt={project.title} 
+                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                   onError={(e) => {
+                     (e.target as HTMLImageElement).src = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%2327272a" /><text x="50%" y="50%" font-family="Arial" font-size="6" fill="%2371717a" text-anchor="middle" dominant-baseline="middle">[ Imagem Indisponível ]</text></svg>`;
+                   }}
+                 />
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+              <motion.div className="absolute bottom-0 left-0 p-6 w-full">
+                <h3 className="text-xl font-bold text-white mb-1 group-hover:text-purple-400 transition-colors">
+                  {project.title}
+                </h3>
+                <p className="text-xs text-zinc-300 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0">
+                  {t.sections.clickToExpand}
+                </p>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* Expanded Modal */}
@@ -103,21 +117,21 @@ export default function PortfolioSection({ title, description, projects }: Portf
                 </button>
 
                 {/* Left Side: Media */}
-                <div className="md:w-1/2 min-h-[300px] bg-black relative flex items-center justify-center">
+                <div className={`md:w-1/2 min-h-[300px] bg-black relative flex items-center justify-center ${selectedProject.isVertical ? 'py-4' : ''}`}>
                   {selectedVideoId ? (
                     <iframe
                       src={`https://www.youtube.com/embed/${selectedVideoId}?autoplay=1&mute=1&loop=1&playlist=${selectedVideoId}&controls=0`}
-                      className="w-full h-full object-cover min-h-[300px] md:min-h-full"
+                      className={selectedProject.isVertical ? "h-full w-auto aspect-[9/16] rounded-md overflow-hidden" : "w-full h-full object-cover min-h-[300px] md:min-h-full"}
                       allow="autoplay; encrypted-media"
                       allowFullScreen
                     />
                   ) : (
                     <img 
-                      src={selectedProject.image} 
+                      src={getThumbnail(selectedProject)} 
                       alt={selectedProject.title} 
-                      className="w-full h-full object-cover"
+                      className={selectedProject.isVertical ? "h-full w-auto aspect-[9/16] object-cover rounded-md" : "w-full h-full object-cover"}
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%2327272a" /><text x="50%" y="50%" font-family="Arial" font-size="6" fill="%2371717a" text-anchor="middle" dominant-baseline="middle">[ Imagem: ${selectedProject.image} ]</text></svg>`;
+                        (e.target as HTMLImageElement).src = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%2327272a" /><text x="50%" y="50%" font-family="Arial" font-size="6" fill="%2371717a" text-anchor="middle" dominant-baseline="middle">[ Imagem Indisponível ]</text></svg>`;
                       }}
                     />
                   )}

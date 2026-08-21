@@ -1,7 +1,6 @@
 "use client";
 
 import Hero from "@/components/Hero";
-import About from "@/components/About";
 import Contact from "@/components/Contact";
 import LanguageToggle from "@/components/LanguageToggle";
 import PortfolioSection, { Project } from "@/components/PortfolioSection";
@@ -82,9 +81,41 @@ export default function Home() {
   ];
 
   const videos: Project[] = [
-    { id: "vid1", title: "Cobertura Expo 2026", image: "/images/vid1.jpg", description: "Aftermovie do evento principal da empresa.", videoUrl: "https://youtu.be/EWkf893ZfOM" },
-    { id: "vid2", title: "Entrevistas Bastidores", image: "/images/vid2.jpg", description: "Reels cobrindo os bastidores da feira.", videoUrl: "https://youtu.be/TL-fPjRIhWk" },
-    { id: "vid3", title: "Teaser Palestra", image: "/images/vid3.jpg", description: "Vídeo curto chamando para o palco principal.", videoUrl: "https://youtu.be/ZmBwy3QiHJs" },
+    { 
+      id: "vid1", 
+      title: "Institucional 7 Anos: Narrativa em Motion", 
+      videoUrl: "https://youtu.be/vD0Gnnu59As",
+      description: (
+        <>
+          <p><strong>O Projeto:</strong> Condensar quase uma década de história institucional em um material dinâmico, que não perdesse a atenção do espectador no meio da narrativa.</p>
+          <p><strong>A Execução:</strong> Para fugir do formato tradicional de slides com fotos corporativas, construí uma linha do tempo imersiva utilizando motion graphics. Todo o projeto foi estruturado com Câmeras 3D no After Effects, navegando entre assets móveis e animações de shape layers. O resultado é um passeio visual contínuo que dá peso e grandiosidade à trajetória da instituição.</p>
+        </>
+      )
+    },
+    { 
+      id: "vid2", 
+      title: "1º Workshop DF-Previcom: Do Play ao Render", 
+      videoUrl: "https://youtube.com/shorts/i01hqWk6IZ4",
+      isVertical: true,
+      description: (
+        <>
+          <p><strong>O Projeto:</strong> Cobertura audiovisual completa do primeiro workshop da organização, entregando um material ágil que pudesse ser consumido rapidamente nas redes.</p>
+          <p><strong>A Execução:</strong> Responsável por toda a pipeline de vídeo, desde a captação de imagens (videomaking) no local até a montagem final. O diferencial técnico desta peça na pós-produção foi a criação e animação do primeiro outro (vinheta de encerramento) oficial da marca, padronizando a identidade visual em vídeo da instituição daqui para a frente.</p>
+        </>
+      )
+    },
+    { 
+      id: "vid3", 
+      title: "Conselho Deliberativo: O Fator Retenção", 
+      videoUrl: "https://youtube.com/shorts/iBaexT3csJk",
+      isVertical: true,
+      description: (
+        <>
+          <p><strong>O Projeto:</strong> Comunicar uma pauta densa e burocrática (reunião de conselho) de forma atrativa nas redes sociais, enfrentando o problema de não ter imagens de apoio (B-roll) do local do evento.</p>
+          <p><strong>A Execução:</strong> O maior desafio nas redes sociais são os 3 primeiros segundos (o hook). Para resolver a falta de captação externa do prédio, iniciei o vídeo com uma animação no Google Earth Studio. Criei um mergulho acelerado vindo do espaço até a sede do evento (CLDF), finalizando com a simulação de um voo de drone orbitando o prédio. Essa solução não apenas contornou a limitação técnica, como quebrou o padrão visual do feed, garantindo a retenção necessária para entregar a mensagem institucional logo na sequência.</p>
+        </>
+      )
+    },
   ];
 
   const projetosPessoais: Project[] = [
@@ -153,7 +184,6 @@ export default function Home() {
     <main className="min-h-screen bg-[#050505] text-[#f3f4f6]">
       <LanguageToggle />
       <Hero />
-      <About />
       
       {/* Portfolio Sections */}
       <div className="py-12">

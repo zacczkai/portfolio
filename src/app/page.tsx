@@ -45,9 +45,40 @@ export default function Home() {
   ];
 
   const carrossel: Project[] = [
-    { id: "car1", title: "Dicas de Marketing", image: "/images/car1.jpg", description: "Carrossel educativo sobre funil de vendas." },
-    { id: "car2", title: "Lançamento de Produto", image: "/images/car2.jpg", description: "Sequência de imagens para lançamento." },
-    { id: "car3", title: "Tutorial Passo a Passo", image: "/images/car3.jpg", description: "Carrossel interativo explicando o uso do produto." },
+    { 
+      id: "car1", 
+      title: "Tradução Visual de Temas Complexos", 
+      image: "/images/O-QUE-É-CD-PROJ_01.png",
+      images: [
+        "/images/O-QUE-É-CD-PROJ_01.png",
+        "/images/O-QUE-É-CD-PROJ_02.png",
+        "/images/O-QUE-É-CD-PROJ_03.png",
+        "/images/O-QUE-É-CD-PROJ_04.png",
+        "/images/O-QUE-É-CD-PROJ_05.png",
+      ],
+      description: (
+        <>
+          <p><strong>Conceito:</strong> O desafio era explicar a estrutura burocrática de um órgão estatutário de forma acessível. A solução focou em um design limpo, priorizando a hierarquia tipográfica e o uso inteligente de respiros visuais, provando que a comunicação institucional pode ser leve e direta.</p>
+        </>
+      )
+    },
+    { 
+      id: "car2", 
+      title: "Educação Financeira: Leitura Fluida", 
+      image: "/images/proj-educacao-financeira_01.png",
+      images: [
+        "/images/proj-educacao-financeira_01.png",
+        "/images/proj-educacao-financeira_02.png",
+        "/images/proj-educacao-financeira_03.png",
+        "/images/proj-educacao-financeira_04.png",
+        "/images/proj-educacao-financeira_05.png",
+      ],
+      description: (
+        <>
+          <p><strong>Conceito:</strong> Para reter a atenção em um tema denso, a estratégia foi utilizar um carrossel em formato contínuo. A composição visual e a linha guia conectam os quadros, transformando blocos de texto em uma jornada dinâmica que conduz o usuário até o call to action final.</p>
+        </>
+      )
+    },
   ];
 
   const videos: Project[] = [

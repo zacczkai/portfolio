@@ -13,14 +13,16 @@ const fadeUp = {
   show: { opacity: 1, y: 0, transition: { duration: 0.7 } },
 } as const;
 
-const tags = [
+const universalTags = [
   "After Effects", "Photoshop", "Premiere Pro",
-  "FL Studio", "Direção de Arte", "Branding",
-  "Motion Graphics", "Color Grading", "Sound Design",
+  "FL Studio", "Motion Graphics", "Color Grading",
+  "Sound Design", "Branding",
 ];
 
 export default function Hero() {
   const { t } = useLanguage();
+
+  const tags = [...universalTags, t.tags.artDirection];
 
   return (
     <section className="relative min-h-[90vh] flex items-center px-4 py-24 overflow-hidden">
@@ -37,7 +39,7 @@ export default function Hero() {
         {/* Left: Text */}
         <div>
           <motion.p variants={fadeUp} className="text-purple-400 font-mono text-sm tracking-widest uppercase mb-4">
-            Portfolio — Publicidade & Propaganda
+            {t.hero.subtitle}
           </motion.p>
 
           <motion.h1 variants={fadeUp} className="text-4xl md:text-6xl font-bold tracking-tight leading-[1.1] mb-6">
@@ -68,7 +70,7 @@ export default function Hero() {
           className="relative h-[420px] rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800 group hidden md:flex items-center justify-center"
         >
           <div className="absolute inset-0 bg-gradient-to-tr from-purple-900/20 to-transparent opacity-40 group-hover:opacity-80 transition-opacity duration-500" />
-          <p className="text-zinc-500 font-mono text-sm z-10">[ Sua foto aqui ]</p>
+          <p className="text-zinc-500 font-mono text-sm z-10">{t.hero.photoAlt}</p>
         </motion.div>
       </motion.div>
     </section>

@@ -175,8 +175,10 @@ export default function Home() {
 
   const projetosPessoaisIntro = (
     <>
-      Esta seleção de projetos autorais não nasceu de uma estratégia de viralização, mas sim como um espaço de pura experimentação narrativa e visual. Ao longo dos últimos anos, utilizei recortes da cultura pop para testar limites de edição, color grading e sound design sem as amarras de um briefing tradicional.<br/><br/>
-      O foco nunca foi o volume de postagens, mas sim a precisão técnica e a liberdade para ditar ritmos, construir atmosferas e explorar ferramentas avançadas de pós-produção. As postagens foram todas feitas em um TikTok criado especificamente para isso, com o nome de <a href="http://tiktok.com/@zacc.an" target="_blank" className="text-purple-400 underline">@zacc.an</a>. Ao todo, foram cerca de 15 vídeos em mais de 5 anos.
+      {t.sections.projetosAutoraisIntro}<br/><br/>
+      {t.sections.projetosAutoraisIntro2}{" "}
+      <a href="http://tiktok.com/@zacc.an" target="_blank" className="text-purple-400 underline">@zacc.an</a>.{" "}
+      {t.sections.projetosAutoraisIntro3}
     </>
   );
 
@@ -194,11 +196,12 @@ export default function Home() {
       </div>
 
       <div className="py-12 border-t border-zinc-900 bg-black/50">
-        <h2 className="text-center text-zinc-500 uppercase tracking-widest font-semibold mb-4">Projetos</h2>
-        <PortfolioSection title="Projetos Autorais de Audiovisual" description={projetosPessoaisIntro} projects={projetosPessoais} />
+        <h2 className="text-center text-zinc-500 uppercase tracking-widest font-semibold mb-4">{t.sections.projects}</h2>
+        <PortfolioSection title={t.sections.projetosAutorais} description={projetosPessoaisIntro} projects={projetosPessoais} />
       </div>
 
       <Contact />
     </main>
   );
 }
+

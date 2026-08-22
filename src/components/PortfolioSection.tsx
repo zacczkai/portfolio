@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
@@ -20,6 +20,37 @@ interface PortfolioSectionProps {
   title: string;
   description?: React.ReactNode | string;
   projects: Project[];
+}
+
+/* ── YouTube thumbnail with fallback cascade ── */
+function YTThumbnail({
+  videoId,
+  alt,
+  className,
+}: {
+  videoId: string;
+  alt: string;
+  className?: string;
+}) {
+  const fallbacks = [
+    `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+    `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+    `https://img.youtube.com/vi/${videoId}/0.jpg`,
+  ];
+  const [srcIndex, setSrcIndex] = useState(0);
+
+  return (
+    <img
+      src={fallbacks[srcIndex]}
+      alt={alt}
+      className={className}
+      onError={() => {
+        if (srcIndex < fallbacks.length - 1) {
+          setSrcIndex((i) => i + 1);
+        }
+      }}
+    />
+  );
 }
 
 /* ── Instagram-style image slider inside modal ── */
@@ -59,7 +90,6 @@ function ImageSlider({ images }: { images: string[] }) {
         </div>
       </div>
 
-      {/* Prev / Next */}
       {canScrollPrev && (
         <button
           onClick={() => emblaApi?.scrollPrev()}
@@ -77,7 +107,6 @@ function ImageSlider({ images }: { images: string[] }) {
         </button>
       )}
 
-      {/* Dots */}
       <div className="flex items-center justify-center gap-1.5 py-3">
         {images.map((_, i) => (
           <button
@@ -98,12 +127,10 @@ function ImageSlider({ images }: { images: string[] }) {
 /* ── Scroll progress hook ── */
 function useScrollProgress(emblaApi: ReturnType<typeof useEmblaCarousel>[1]) {
   const [progress, setProgress] = useState(0);
-  const [canScroll, setCanScroll] = useState(false);
 
   const onScroll = useCallback(() => {
     if (!emblaApi) return;
     setProgress(Math.max(0, Math.min(1, emblaApi.scrollProgress())));
-    setCanScroll(emblaApi.canScrollNext() || emblaApi.canScrollPrev());
   }, [emblaApi]);
 
   useEffect(() => {
@@ -117,7 +144,67 @@ function useScrollProgress(emblaApi: ReturnType<typeof useEmblaCarousel>[1]) {
     };
   }, [emblaApi, onScroll]);
 
-  return { progress, canScroll };
+  return progress;
+}
+
+/* ── Shared card renderer ── */
+function ProjectCard({
+  project,
+  index,
+  onClick,
+  getThumbnail,
+  getYouTubeId,
+  clickLabel,
+}: {
+  project: Project;
+  index: number;
+  onClick: () => void;
+  getThumbnail: (p: Project) => string;
+  getYouTubeId: (url?: string) => string | null;
+  clickLabel: string;
+}) {
+  const ytId = getYouTubeId(project.videoUrl);
+  const thumb = getThumbnail(project);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.08, duration: 0.5 }}
+      whileHover={{ y: -8, transition: { type: "spring", stiffness: 400, damping: 15 } }}
+      onClick={onClick}
+      className="relative flex-shrink-0 w-72 md:w-80 h-96 rounded-2xl overflow-hidden cursor-pointer group border border-zinc-800 bg-zinc-900 select-none"
+    >
+      <div className="absolute inset-0 bg-zinc-800">
+        {ytId ? (
+          <YTThumbnail videoId={ytId} alt={project.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+        ) : thumb ? (
+          <img
+            src={thumb}
+            alt={project.title}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+          />
+        ) : null}
+      </div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent group-hover:via-purple-900/10 transition-all duration-500" />
+      <div className="absolute bottom-0 left-0 p-6 w-full">
+        <h3 className="text-xl font-bold text-white mb-1 group-hover:text-purple-400 transition-colors duration-300">
+          {project.title}
+        </h3>
+        <p className="text-xs text-zinc-400 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+          {clickLabel}
+        </p>
+      </div>
+
+      {project.images && project.images.length > 1 && (
+        <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full border border-zinc-700">
+          {project.images.length} slides
+        </div>
+      )}
+    </motion.div>
+  );
 }
 
 /* ── Main component ── */
@@ -127,15 +214,39 @@ export default function PortfolioSection({ title, description, projects }: Portf
   const [emblaRef, emblaApi] = useEmblaCarousel({
     dragFree: true,
     containScroll: "trimSnaps",
-    align: projects.length <= 3 ? "center" : "start",
   });
+  const [isScrollable, setIsScrollable] = useState(true);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
 
-  const { progress: scrollProgress, canScroll } = useScrollProgress(emblaApi);
+  const scrollProgress = useScrollProgress(emblaApi);
   const selectedProject = projects.find((p) => p.id === selectedId);
+
+  // Check if embla can scroll and update arrow state
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setCanScrollPrev(emblaApi.canScrollPrev());
+    setCanScrollNext(emblaApi.canScrollNext());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    const canScroll = emblaApi.canScrollNext() || emblaApi.canScrollPrev();
+    setIsScrollable(canScroll);
+    onSelect();
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", () => {
+      const cs = emblaApi.canScrollNext() || emblaApi.canScrollPrev();
+      setIsScrollable(cs);
+      onSelect();
+    });
+    return () => {
+      emblaApi.off("select", onSelect);
+    };
+  }, [emblaApi, onSelect]);
 
   const getYouTubeId = (url?: string) => {
     if (!url) return null;
-    // Handle shorts URLs
     const shortsMatch = url.match(/youtube\.com\/shorts\/([^?&]+)/);
     if (shortsMatch) return shortsMatch[1];
     const match = url.match(
@@ -147,13 +258,10 @@ export default function PortfolioSection({ title, description, projects }: Portf
   const getThumbnail = (project: Project) => {
     if (project.image) return project.image;
     if (project.images?.[0]) return project.images[0];
-    const id = getYouTubeId(project.videoUrl);
-    return id ? `https://img.youtube.com/vi/${id}/maxresdefault.jpg` : "";
+    return "";
   };
 
   const selectedVideoId = getYouTubeId(selectedProject?.videoUrl);
-
-  // Determine if the project has only a single image (no video, no carousel)
   const isSingleImage = selectedProject && !selectedVideoId && !selectedProject.images?.length;
 
   return (
@@ -171,64 +279,71 @@ export default function PortfolioSection({ title, description, projects }: Portf
         )}
       </motion.div>
 
-      {/* ── Embla Carousel ── */}
-      <div className="overflow-hidden cursor-grab active:cursor-grabbing" ref={emblaRef}>
-        <div className="flex gap-6">
-          {projects.map((project, index) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
-              whileHover={{ y: -8, transition: { type: "spring", stiffness: 400, damping: 15 } }}
-              onClick={() => setSelectedId(project.id)}
-              className="relative flex-shrink-0 w-72 md:w-80 h-96 rounded-2xl overflow-hidden cursor-pointer group border border-zinc-800 bg-zinc-900 select-none"
-            >
-              <div className="absolute inset-0 bg-zinc-800">
-                <img
-                  src={getThumbnail(project)}
-                  alt={project.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = "none";
-                  }}
+      {/* ── Cards layout ── */}
+      {isScrollable ? (
+        /* Scrollable: Embla carousel with desktop arrows */
+        <div className="relative group/carousel">
+          <div className="overflow-hidden cursor-grab active:cursor-grabbing" ref={emblaRef}>
+            <div className="flex gap-6">
+              {projects.map((project, index) => (
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  index={index}
+                  onClick={() => setSelectedId(project.id)}
+                  getThumbnail={getThumbnail}
+                  getYouTubeId={getYouTubeId}
+                  clickLabel={t.sections.clickToExpand}
                 />
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent group-hover:via-purple-900/10 transition-all duration-500" />
-              <div className="absolute bottom-0 left-0 p-6 w-full">
-                <h3 className="text-xl font-bold text-white mb-1 group-hover:text-purple-400 transition-colors duration-300">
-                  {project.title}
-                </h3>
-                <p className="text-xs text-zinc-400 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
-                  {t.sections.clickToExpand}
-                </p>
-              </div>
+              ))}
+            </div>
+          </div>
 
-              {project.images && project.images.length > 1 && (
-                <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full border border-zinc-700">
-                  {project.images.length} slides
-                </div>
-              )}
-            </motion.div>
-          ))}
-        </div>
-      </div>
+          {/* Desktop navigation arrows */}
+          {canScrollPrev && (
+            <button
+              onClick={() => emblaApi?.scrollPrev()}
+              className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 p-3 bg-black/70 hover:bg-purple-900/80 text-white rounded-full transition-all backdrop-blur-sm opacity-0 group-hover/carousel:opacity-100 -translate-x-2 group-hover/carousel:translate-x-0"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+          )}
+          {canScrollNext && (
+            <button
+              onClick={() => emblaApi?.scrollNext()}
+              className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 p-3 bg-black/70 hover:bg-purple-900/80 text-white rounded-full transition-all backdrop-blur-sm opacity-0 group-hover/carousel:opacity-100 translate-x-2 group-hover/carousel:translate-x-0"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          )}
 
-      {/* ── Progress bar (only when scrollable) ── */}
-      {canScroll && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="mt-6 flex items-center gap-3"
-        >
-          <div className="flex-1 h-[2px] bg-zinc-800 rounded-full overflow-hidden">
+          {/* Progress bar */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mt-6 h-[2px] bg-zinc-800 rounded-full overflow-hidden"
+          >
             <motion.div
               className="h-full bg-gradient-to-r from-purple-600 to-purple-400 rounded-full"
               style={{ width: `${Math.max(scrollProgress * 100, 8)}%` }}
             />
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
+      ) : (
+        /* Not scrollable: centered flex layout */
+        <div className="flex flex-wrap justify-center gap-6">
+          {projects.map((project, index) => (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              index={index}
+              onClick={() => setSelectedId(project.id)}
+              getThumbnail={getThumbnail}
+              getYouTubeId={getYouTubeId}
+              clickLabel={t.sections.clickToExpand}
+            />
+          ))}
+        </div>
       )}
 
       {/* ── Modal ── */}
@@ -292,7 +407,7 @@ export default function PortfolioSection({ title, description, projects }: Portf
                     </div>
                   </>
                 ) : selectedProject.images && selectedProject.images.length > 0 ? (
-                  /* ── INSTAGRAM CAROUSEL: narrow modal, image fills width ── */
+                  /* ── INSTAGRAM CAROUSEL ── */
                   <>
                     <ImageSlider images={selectedProject.images} />
                     <div className="p-6 flex flex-col overflow-y-auto flex-1 custom-scrollbar">
@@ -305,7 +420,7 @@ export default function PortfolioSection({ title, description, projects }: Portf
                     </div>
                   </>
                 ) : isSingleImage ? (
-                  /* ── SINGLE IMAGE: narrow modal, no black bars ── */
+                  /* ── SINGLE IMAGE ── */
                   <>
                     <img
                       src={getThumbnail(selectedProject)}
@@ -322,7 +437,7 @@ export default function PortfolioSection({ title, description, projects }: Portf
                     </div>
                   </>
                 ) : (
-                  /* ── HORIZONTAL VIDEO: video on top, text below ── */
+                  /* ── HORIZONTAL VIDEO ── */
                   <>
                     <div className="w-full bg-black">
                       {selectedVideoId && (

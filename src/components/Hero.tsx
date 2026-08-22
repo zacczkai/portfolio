@@ -69,8 +69,12 @@ export default function Hero() {
           variants={fadeUp}
           className="relative h-[420px] rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800 group hidden md:flex items-center justify-center"
         >
-          <div className="absolute inset-0 bg-gradient-to-tr from-purple-900/20 to-transparent opacity-40 group-hover:opacity-80 transition-opacity duration-500" />
-          <p className="text-zinc-500 font-mono text-sm z-10">{t.hero.photoAlt}</p>
+          <img 
+            src="/images/minha foto.jpeg" 
+            alt={t.hero.photoAlt}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-tr from-purple-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
         </motion.div>
       </motion.div>
     </section>

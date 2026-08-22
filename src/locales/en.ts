@@ -1,10 +1,10 @@
 const en = {
   hero: {
-    subtitle: "Portfolio — Advertising & Propaganda",
-    line1: "Turning noise",
-    line2: "into clarity.",
-    description: "Advertising & Propaganda Specialist. Creating visual narratives that connect brands to people and drive real results.",
-    photoAlt: "[ Your photo here ]"
+    subtitle: "ENZO GUERREIRO — ADVERTISING & PROPAGANDA",
+    line1: "Creativity guided by",
+    line2: "technique.",
+    description: "I study Advertising and operate at the intersection of design, audiovisual, and strategy. I have a passion for technical execution: from meticulous color grading to clean institutional layouts. My goal is to deliver clear messages with high aesthetic standards for any format or platform.",
+    photoAlt: "Photo of Enzo Guerreiro"
   },
   sections: {
     datasComemorativas: "Commemorative Dates",

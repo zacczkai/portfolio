@@ -1,10 +1,10 @@
 const pt = {
   hero: {
-    subtitle: "Portfolio — Publicidade & Propaganda",
-    line1: "Transformando ruído",
-    line2: "em clareza.",
-    description: "Especialista em Publicidade e Propaganda. Criando narrativas visuais que conectam marcas a pessoas e geram resultados reais.",
-    photoAlt: "[ Sua foto aqui ]"
+    subtitle: "ENZO GUERREIRO — PUBLICIDADE & PROPAGANDA",
+    line1: "Criatividade guiada pela",
+    line2: "técnica.",
+    description: "Estudo Publicidade e atuo na intersecção entre design, audiovisual e estratégia. Tenho paixão pela execução técnica: do color grading minucioso ao layout institucional limpo. Meu objetivo é entregar mensagens claras e com alto padrão estético para qualquer formato ou plataforma.",
+    photoAlt: "Foto de Enzo Guerreiro"
   },
   sections: {
     datasComemorativas: "Datas Comemorativas",

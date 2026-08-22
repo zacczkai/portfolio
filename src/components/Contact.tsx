@@ -28,10 +28,10 @@ export default function Contact() {
           transition={{ delay: 0.2 }}
           className="flex justify-center gap-6"
         >
-          <a href="#" className="p-4 bg-zinc-900 rounded-full hover:bg-purple-900/50 hover:text-purple-400 transition-all">
+          <a href="mailto:enzoguerreiro05@gmail.com" className="p-4 bg-zinc-900 rounded-full hover:bg-purple-900/50 hover:text-purple-400 transition-all">
             <Mail className="w-6 h-6" />
           </a>
-          <a href="#" className="p-4 bg-zinc-900 rounded-full hover:bg-purple-900/50 hover:text-purple-400 transition-all">
+          <a href="https://www.linkedin.com/in/enzo-guerreiro-568a4b233/" target="_blank" rel="noreferrer" className="p-4 bg-zinc-900 rounded-full hover:bg-purple-900/50 hover:text-purple-400 transition-all">
             <LinkIcon className="w-6 h-6" />
           </a>
           <a href="#" className="p-4 bg-zinc-900 rounded-full hover:bg-purple-900/50 hover:text-purple-400 transition-all">
@@ -40,7 +40,7 @@ export default function Contact() {
         </motion.div>
 
         <p className="mt-12 text-zinc-600 text-sm">
-          © {new Date().getFullYear()} Seu Nome. {t.contact.rights}
+          © {new Date().getFullYear()} Enzo Guerreiro. {t.contact.rights}
         </p>
       </div>
     </footer>

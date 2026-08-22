@@ -271,11 +271,11 @@ export default function PortfolioSection({ title, description, projects }: Portf
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-50px" }}
         transition={{ duration: 0.5 }}
-        className="mb-8"
+        className={`mb-8 ${!isScrollable ? "text-center" : ""}`}
       >
         <h2 className="text-3xl md:text-4xl font-bold mb-4">{title}</h2>
         {description && (
-          <div className="text-gray-400 text-lg leading-relaxed">{description}</div>
+          <div className={`text-gray-400 text-lg leading-relaxed ${!isScrollable ? "max-w-3xl mx-auto" : ""}`}>{description}</div>
         )}
       </motion.div>
 

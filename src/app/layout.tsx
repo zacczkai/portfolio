@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 import { LanguageProvider } from "@/context/LanguageContext";
 
 export const metadata: Metadata = {
-  title: "Portfolio",
-  description: "Publicidade e Propaganda",
+  title: "Enzo Guerreiro | Portfolio de Publicidade, Design e Motion Graphics",
+  description: "Portfolio de Enzo Guerreiro. Especialista em Publicidade e Propaganda, Direção de Arte, Motion Graphics e Color Grading.",
 };
 
 export default function RootLayout({

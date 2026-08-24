@@ -16,9 +16,11 @@ const pt = {
     projetosAutoraisIntro: "Esta seleção de projetos autorais não nasceu de uma estratégia de viralização, mas sim como um espaço de pura experimentação narrativa e visual. Ao longo dos últimos anos, utilizei recortes da cultura pop para testar limites de edição, color grading e sound design sem as amarras de um briefing tradicional.",
     projetosAutoraisIntro2: "O foco nunca foi o volume de postagens, mas sim a precisão técnica e a liberdade para ditar ritmos, construir atmosferas e explorar ferramentas avançadas de pós-produção. As postagens foram todas feitas em um TikTok criado especificamente para isso, com o nome de",
     projetosAutoraisIntro3: "Ao todo, foram cerca de 15 vídeos em mais de 5 anos.",
-    clickToExpand: "Clique para expandir",
+    clickToExpand: "Clique para ver processo criativo",
     close: "Fechar",
-    internship: "Estágio"
+    internship: "Estágio",
+    internshipDesc: "Trabalhos institucionais focados em clareza, design limpo e engajamento.",
+    projectsDesc: "Estudos técnicos e narrativos explorando as possibilidades da edição visual."
   },
   contact: {
     title1: "Vamos trabalhar",

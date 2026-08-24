@@ -5,6 +5,7 @@ import Contact from "@/components/Contact";
 import LanguageToggle from "@/components/LanguageToggle";
 import PortfolioSection, { Project } from "@/components/PortfolioSection";
 import { useLanguage } from "@/context/LanguageContext";
+import Navbar from "@/components/Navbar";
 
 export default function Home() {
   const { t } = useLanguage();
@@ -24,7 +25,7 @@ export default function Home() {
     { 
       id: "dc2", 
       title: "Dia dos Pais: Composição e Profundidade", 
-      image: "/images/dia dos pais noise.png", 
+      image: "/images/dia-dos-pais-noise.png", 
       description: (
         <>
           <p><strong>Execução:</strong> Foco em layout e manipulação de imagem. Utilização de máscaras de recorte na tipografia e separação de planos para criar uma peça institucional limpa, equilibrada e que transmite acolhimento.</p>
@@ -184,19 +185,35 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#050505] text-[#f3f4f6]">
+      <Navbar />
       <LanguageToggle />
       <Hero />
       
       {/* Portfolio Sections */}
       <div className="py-12">
-        <h2 className="text-center text-zinc-500 uppercase tracking-widest font-semibold mb-4">{t.sections.internship}</h2>
-        <PortfolioSection title={t.sections.datasComemorativas} projects={datasComemorativas} />
-        <PortfolioSection title={t.sections.carrossel} projects={carrossel} />
-        <PortfolioSection title={t.sections.videosEventos} projects={videos} />
+        <div className="max-w-6xl mx-auto px-4 mb-4 text-center">
+          <h2 className="text-zinc-500 uppercase tracking-widest font-semibold">{t.sections.internship}</h2>
+          <p className="text-zinc-600 mt-2">{t.sections.internshipDesc}</p>
+        </div>
+        
+        <div id="datas-comemorativas">
+          <PortfolioSection title={t.sections.datasComemorativas} projects={datasComemorativas} />
+        </div>
+        
+        <div id="carrossel">
+          <PortfolioSection title={t.sections.carrossel} projects={carrossel} />
+        </div>
+        
+        <div id="videos">
+          <PortfolioSection title={t.sections.videosEventos} projects={videos} />
+        </div>
       </div>
 
-      <div className="py-12 border-t border-zinc-900 bg-black/50">
-        <h2 className="text-center text-zinc-500 uppercase tracking-widest font-semibold mb-4">{t.sections.projects}</h2>
+      <div id="projetos" className="py-12 border-t border-zinc-900 bg-black/50">
+        <div className="max-w-6xl mx-auto px-4 mb-4 text-center">
+          <h2 className="text-zinc-500 uppercase tracking-widest font-semibold">{t.sections.projects}</h2>
+          <p className="text-zinc-600 mt-2">{t.sections.projectsDesc}</p>
+        </div>
         <PortfolioSection title={t.sections.projetosAutorais} description={projetosPessoaisIntro} projects={projetosPessoais} />
       </div>
 

@@ -8,7 +8,7 @@ export default function Contact() {
   const { t } = useLanguage();
 
   return (
-    <footer className="py-24 px-4 border-t border-zinc-900 bg-black relative overflow-hidden">
+    <footer id="contato" className="py-24 px-4 border-t border-zinc-900 bg-black relative overflow-hidden">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-purple-900 to-transparent opacity-50" />
       
       <div className="max-w-4xl mx-auto text-center relative z-10">
@@ -34,7 +34,7 @@ export default function Contact() {
           <a href="https://www.linkedin.com/in/enzo-guerreiro-568a4b233/" target="_blank" rel="noreferrer" className="p-4 bg-zinc-900 rounded-full hover:bg-purple-900/50 hover:text-purple-400 transition-all">
             <LinkIcon className="w-6 h-6" />
           </a>
-          <a href="#" className="p-4 bg-zinc-900 rounded-full hover:bg-purple-900/50 hover:text-purple-400 transition-all">
+          <a href="https://behance.net/raajzkai" target="_blank" rel="noreferrer" className="p-4 bg-zinc-900 rounded-full hover:bg-purple-900/50 hover:text-purple-400 transition-all">
             <Globe className="w-6 h-6" />
           </a>
         </motion.div>

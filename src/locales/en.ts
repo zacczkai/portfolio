@@ -16,9 +16,11 @@ const en = {
     projetosAutoraisIntro: "This selection of original projects was never born out of a viralization strategy, but rather as a space for pure narrative and visual experimentation. Over the past few years, I used pop culture references to push the limits of editing, color grading, and sound design without the constraints of a traditional brief.",
     projetosAutoraisIntro2: "The focus was never on volume, but on technical precision and the freedom to dictate rhythms, build atmospheres, and explore advanced post-production tools. All posts were made on a TikTok account created specifically for this purpose, under the handle",
     projetosAutoraisIntro3: "In total, about 15 videos over more than 5 years.",
-    clickToExpand: "Click to expand",
+    clickToExpand: "Click to see creative process",
     close: "Close",
-    internship: "Internship"
+    internship: "Internship",
+    internshipDesc: "Institutional work focused on clarity, clean design, and engagement.",
+    projectsDesc: "Technical and narrative studies exploring the possibilities of visual editing."
   },
   contact: {
     title1: "Let's work",

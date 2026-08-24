@@ -20,7 +20,9 @@ const pt = {
     close: "Fechar",
     internship: "Estágio",
     internshipDesc: "Trabalhos institucionais focados em clareza, design limpo e engajamento.",
-    projectsDesc: "Estudos técnicos e narrativos explorando as possibilidades da edição visual."
+    projectsDesc: "Estudos técnicos e narrativos explorando as possibilidades da edição visual.",
+    navHome: "Início",
+    navContato: "Contato"
   },
   contact: {
     title1: "Vamos trabalhar",

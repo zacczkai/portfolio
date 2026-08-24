@@ -20,7 +20,9 @@ const en = {
     close: "Close",
     internship: "Internship",
     internshipDesc: "Institutional work focused on clarity, clean design, and engagement.",
-    projectsDesc: "Technical and narrative studies exploring the possibilities of visual editing."
+    projectsDesc: "Technical and narrative studies exploring the possibilities of visual editing.",
+    navHome: "Home",
+    navContato: "Contact"
   },
   contact: {
     title1: "Let's work",

@@ -79,6 +79,23 @@ export default function Home() {
         </>
       )
     },
+    { 
+      id: "car3", 
+      title: "Inbound Marketing: O Agora e o Futuro", 
+      image: "/images/post---reserva-de-emergencia_01.png",
+      images: [
+        "/images/post---reserva-de-emergencia_01.png",
+        "/images/post---reserva-de-emergencia_02.png",
+        "/images/post---reserva-de-emergencia_03.png",
+        "/images/post---reserva-de-emergencia_04.png",
+      ],
+      description: (
+        <>
+          <p><strong>Conceito:</strong> Peça de topo de funil focada em literacia financeira. O objetivo foi desmistificar o conceito de Reserva de Emergência de forma didática, construindo uma ponte narrativa entre a dor imediata do usuário (imprevistos) e a solução de longo prazo oferecida pela marca (previdência).</p>
+          <p><strong>Execução Visual e Copy:</strong> O layout prioriza a hierarquia da informação e a escaneabilidade, utilizando blocos de cor e metáforas visuais (como o guarda-chuva simbolizando proteção). O ritmo de leitura do carrossel foi pensado para educar o público de forma leve, culminando em uma transição orgânica para o core business da instituição no slide final.</p>
+        </>
+      )
+    },
   ];
 
   const videos: Project[] = [
@@ -187,7 +204,9 @@ export default function Home() {
     <main className="min-h-screen bg-[#050505] text-[#f3f4f6]">
       <Navbar />
       <LanguageToggle />
-      <Hero />
+      <div id="hero">
+        <Hero />
+      </div>
       
       {/* Portfolio Sections */}
       <div className="py-12">

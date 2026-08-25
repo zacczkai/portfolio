@@ -26,31 +26,36 @@ export default function Navbar() {
     { id: "contato", href: "#contato", label: t.sections.navContato },
   ];
 
-  // IntersectionObserver to track active section
+  // Scroll listener to track active section
   useEffect(() => {
     const sectionIds = ["hero", "datas-comemorativas", "carrossel", "videos", "projetos", "contato"];
-    const elements = sectionIds
-      .map((id) => document.getElementById(id))
-      .filter(Boolean) as HTMLElement[];
+    
+    const handleScroll = () => {
+      // If at absolute top, reset to hero
+      if (window.scrollY < 50) {
+        setActiveSection("hero");
+        return;
+      }
 
-    if (elements.length === 0) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // Find the entry with the largest intersection ratio
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-
-        if (visible.length > 0) {
-          setActiveSection(visible[0].target.id);
+      // Find which section is currently occupying the top part of the viewport (under navbar)
+      for (let i = sectionIds.length - 1; i >= 0; i--) {
+        const el = document.getElementById(sectionIds[i]);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          // We consider a section active if its top is above the middle of the screen (or just passed the navbar)
+          // 200px is a good threshold below the top of the viewport
+          if (rect.top <= 200) {
+            setActiveSection(sectionIds[i]);
+            break;
+          }
         }
-      },
-      { threshold: [0.1, 0.3, 0.5], rootMargin: "-64px 0px -200px 0px" }
-    );
+      }
+    };
 
-    elements.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // initial check
+    
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const scrollTo = useCallback(

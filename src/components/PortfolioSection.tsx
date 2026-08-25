@@ -45,6 +45,11 @@ function YTThumbnail({
       src={fallbacks[srcIndex]}
       alt={alt}
       className={className}
+      onLoad={(e) => {
+        if ((e.target as HTMLImageElement).naturalWidth === 120 && srcIndex < fallbacks.length - 1) {
+          setSrcIndex((i) => i + 1);
+        }
+      }}
       onError={() => {
         if (srcIndex < fallbacks.length - 1) {
           setSrcIndex((i) => i + 1);

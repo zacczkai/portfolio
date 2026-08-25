@@ -204,7 +204,7 @@ export default function Home() {
     <main className="min-h-screen bg-[#050505] text-[#f3f4f6]">
       <Navbar />
       <LanguageToggle />
-      <div id="hero">
+      <div id="hero" className="scroll-mt-20">
         <Hero />
       </div>
       
@@ -215,20 +215,20 @@ export default function Home() {
           <p className="text-zinc-600 mt-2">{t.sections.internshipDesc}</p>
         </div>
         
-        <div id="datas-comemorativas">
+        <div id="datas-comemorativas" className="scroll-mt-20">
           <PortfolioSection title={t.sections.datasComemorativas} projects={datasComemorativas} />
         </div>
         
-        <div id="carrossel">
+        <div id="carrossel" className="scroll-mt-20">
           <PortfolioSection title={t.sections.carrossel} projects={carrossel} />
         </div>
         
-        <div id="videos">
+        <div id="videos" className="scroll-mt-20">
           <PortfolioSection title={t.sections.videosEventos} projects={videos} />
         </div>
       </div>
 
-      <div id="projetos" className="py-12 border-t border-zinc-900 bg-black/50">
+      <div id="projetos" className="py-12 border-t border-zinc-900 bg-black/50 scroll-mt-20">
         <div className="max-w-6xl mx-auto px-4 mb-4 text-center">
           <h2 className="text-zinc-500 uppercase tracking-widest font-semibold">{t.sections.projects}</h2>
           <p className="text-zinc-600 mt-2">{t.sections.projectsDesc}</p>

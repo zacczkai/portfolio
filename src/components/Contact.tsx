@@ -1,8 +1,21 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Mail, Globe, Link as LinkIcon } from "lucide-react";
+import { Mail, Linkedin } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+
+const BehanceIcon = ({ className }: { className?: string }) => (
+  <svg
+    className={className}
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+  >
+    <path d="M22 7h-7v2h7V7zm1.72 6.51c0-2.31-1.29-4.22-3.87-4.22-2.36 0-3.88 1.95-3.88 4.3 0 2.45 1.54 4.3 4.14 4.3 1.95 0 3.32-.93 3.8-2.58h-1.92c-.22.65-.91 1.05-1.78 1.05-1.07 0-1.83-.69-1.93-1.84h5.41c.01-.27.03-.61.03-1.01zm-3.81-1.28c.84 0 1.55.51 1.77 1.28h-3.66c.21-.76.93-1.28 1.89-1.28zM8.88 7H0v13h9.12c3.48 0 5.48-1.52 5.48-4.14 0-1.78-1.07-3.03-2.61-3.48v-.11c1.23-.39 2.05-1.52 2.05-3 0-2.3-1.63-3.6-5.16-3.6zm-1.04 7.62H3v3.74h4.74c1.33 0 2.21-.55 2.21-1.87 0-1.39-.93-1.87-2.11-1.87zm-.59-4.96H3v3.13h4.25c1.17 0 1.95-.51 1.95-1.61 0-1.12-.76-1.52-1.95-1.52z" />
+  </svg>
+);
 
 export default function Contact() {
   const { t } = useLanguage();
@@ -32,10 +45,10 @@ export default function Contact() {
             <Mail className="w-6 h-6" />
           </a>
           <a href="https://www.linkedin.com/in/enzo-guerreiro-568a4b233/" target="_blank" rel="noreferrer" className="p-4 bg-zinc-900 rounded-full hover:bg-purple-900/50 hover:text-purple-400 transition-all">
-            <LinkIcon className="w-6 h-6" />
+            <Linkedin className="w-6 h-6" />
           </a>
           <a href="https://behance.net/raajzkai" target="_blank" rel="noreferrer" className="p-4 bg-zinc-900 rounded-full hover:bg-purple-900/50 hover:text-purple-400 transition-all">
-            <Globe className="w-6 h-6" />
+            <BehanceIcon className="w-6 h-6" />
           </a>
         </motion.div>
 

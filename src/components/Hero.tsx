@@ -15,7 +15,7 @@ const fadeUp = {
 
 const universalTags = [
   "After Effects", "Photoshop", "Premiere Pro",
-  "FL Studio", "Motion Graphics", "Color Grading",
+  "Motion Graphics", "Color Grading",
   "Sound Design", "Branding",
 ];
 

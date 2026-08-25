@@ -30,6 +30,7 @@ export default function RootLayout({
         <LanguageProvider>
         <div className="relative">
           <div className="glow-bg" aria-hidden="true"></div>
+          <div className="grid-bg" aria-hidden="true"></div>
           {children}
         </div>
       </LanguageProvider>

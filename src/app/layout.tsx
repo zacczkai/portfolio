@@ -29,8 +29,6 @@ export default function RootLayout({
       <body className="antialiased">
         <LanguageProvider>
         <div className="relative">
-          <div className="glow-bg" aria-hidden="true"></div>
-          <div className="grid-bg" aria-hidden="true"></div>
           {children}
         </div>
       </LanguageProvider>

@@ -26,9 +26,6 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-[90vh] flex items-center px-4 py-24 overflow-hidden">
-      {/* Background elements */}
-      <div className="absolute top-1/3 -left-32 w-80 h-80 bg-purple-900/20 rounded-full blur-[120px]" />
-      <div className="absolute bottom-1/4 right-0 w-64 h-64 bg-purple-600/10 rounded-full blur-[100px]" />
 
       <motion.div
         variants={stagger}

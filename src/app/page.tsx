@@ -102,7 +102,7 @@ export default function Home() {
     { 
       id: "vid1", 
       title: "Institucional 7 Anos: Narrativa em Motion", 
-      videoUrl: "https://youtu.be/vD0Gnnu59As",
+      videoUrl: "https://res.cloudinary.com/amh1rowo/video/upload/q_auto,f_mp4/v1787689879/V%C3%ADdeo_Final_-_Max_Bitrate_1_1.mp4",
       description: (
         <>
           <p><strong>O Projeto:</strong> Condensar quase uma década de história institucional em um material dinâmico, que não perdesse a atenção do espectador no meio da narrativa.</p>
@@ -113,7 +113,7 @@ export default function Home() {
     { 
       id: "vid2", 
       title: "1º Workshop DF-Previcom: Do Play ao Render", 
-      videoUrl: "https://youtube.com/shorts/i01hqWk6IZ4",
+      videoUrl: "https://res.cloudinary.com/amh1rowo/video/upload/q_auto,f_mp4/v1787688159/V%C3%ADdeo_-_Workshop_o_futuro_da_DF-PREVICOM.mp4",
       isVertical: true,
       description: (
         <>
@@ -125,7 +125,7 @@ export default function Home() {
     { 
       id: "vid3", 
       title: "Conselho Deliberativo: O Fator Retenção", 
-      videoUrl: "https://youtube.com/shorts/iBaexT3csJk",
+      videoUrl: "https://res.cloudinary.com/amh1rowo/video/upload/q_auto,f_mp4/v1787689778/V%C3%ADdeo_-_CLDF_CD_Itinerante.mp4",
       isVertical: true,
       description: (
         <>
@@ -140,7 +140,7 @@ export default function Home() {
     { 
       id: "pp1", 
       title: "Across the Spider-Verse: Frenesi e Dualidade", 
-      videoUrl: "https://youtu.be/EWkf893ZfOM",
+      videoUrl: "https://res.cloudinary.com/amh1rowo/video/upload/q_auto,f_mp4/v1787687139/spiderverse.mp4",
       description: (
         <>
           <p><strong>Softwares utilizados:</strong> After Effects, Photoshop, FL Studio e Magic Bullet Looks.</p>
@@ -153,7 +153,7 @@ export default function Home() {
     { 
       id: "pp2", 
       title: "La La Land: A Estética da Melancolia", 
-      videoUrl: "https://youtu.be/TL-fPjRIhWk",
+      videoUrl: "https://res.cloudinary.com/amh1rowo/video/upload/q_auto,f_mp4/v1787687142/la_la_land.mp4",
       description: (
         <>
           <p><strong>Softwares utilizados:</strong> After Effects, Photoshop e Magic Bullet Looks.</p>
@@ -166,7 +166,7 @@ export default function Home() {
     { 
       id: "pp3", 
       title: "Manga Motion: Parallax & Ironia Narrativa", 
-      videoUrl: "https://youtu.be/ey7NhBkqtCA",
+      videoUrl: "https://res.cloudinary.com/amh1rowo/video/upload/q_auto,f_mp4/v1787686789/naruto.mp4",
       isVertical: true,
       description: (
         <>
@@ -180,7 +180,7 @@ export default function Home() {
     { 
       id: "pp4", 
       title: "Fight Club: O Peso da Projeção", 
-      videoUrl: "https://youtu.be/ZmBwy3QiHJs",
+      videoUrl: "https://res.cloudinary.com/amh1rowo/video/upload/q_auto,f_mp4/v1787687152/creep_fight_club.mp4",
       description: (
         <>
           <p><strong>Softwares utilizados:</strong> After Effects e Magic Bullet Looks.</p>
@@ -201,12 +201,12 @@ export default function Home() {
   );
 
   return (
-    <main className="min-h-screen bg-[#050505] text-[#f3f4f6]">
+    <main className="min-h-screen text-[#f3f4f6] relative z-[1]">
       <Navbar />
       <LanguageToggle />
-      <div id="hero" className="scroll-mt-20">
+      <section id="hero" className="scroll-mt-20">
         <Hero />
-      </div>
+      </section>
       
       {/* Portfolio Sections */}
       <div className="py-12">
@@ -215,26 +215,26 @@ export default function Home() {
           <p className="text-zinc-600 mt-2">{t.sections.internshipDesc}</p>
         </div>
         
-        <div id="datas-comemorativas" className="scroll-mt-20">
+        <section id="datas-comemorativas" className="scroll-mt-20">
           <PortfolioSection title={t.sections.datasComemorativas} projects={datasComemorativas} />
-        </div>
+        </section>
         
-        <div id="carrossel" className="scroll-mt-20">
+        <section id="carrossel" className="scroll-mt-20">
           <PortfolioSection title={t.sections.carrossel} projects={carrossel} />
-        </div>
+        </section>
         
-        <div id="videos" className="scroll-mt-20">
+        <section id="videos" className="scroll-mt-20">
           <PortfolioSection title={t.sections.videosEventos} projects={videos} />
-        </div>
+        </section>
       </div>
 
-      <div id="projetos" className="py-12 border-t border-zinc-900 bg-black/50 scroll-mt-20">
+      <section id="projetos" className="py-12 border-t border-zinc-900 scroll-mt-20">
         <div className="max-w-6xl mx-auto px-4 mb-4 text-center">
           <h2 className="text-zinc-500 uppercase tracking-widest font-semibold">{t.sections.projects}</h2>
           <p className="text-zinc-600 mt-2">{t.sections.projectsDesc}</p>
         </div>
         <PortfolioSection title={t.sections.projetosAutorais} description={projetosPessoaisIntro} projects={projetosPessoais} />
-      </div>
+      </section>
 
       <Contact />
     </main>

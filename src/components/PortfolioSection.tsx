@@ -261,14 +261,24 @@ export default function PortfolioSection({ title, description, projects }: Portf
     return match ? match[1] : null;
   };
 
+  const isCloudinaryVideo = (url?: string) => {
+    return url ? url.includes("cloudinary.com/") && url.includes("/video/") : false;
+  };
+
   const getThumbnail = (project: Project) => {
     if (project.image) return project.image;
     if (project.images?.[0]) return project.images[0];
+    if (isCloudinaryVideo(project.videoUrl)) {
+      return project.videoUrl!
+        .replace(/\.(mp4|ts|webm)$/, '.jpg')
+        .replace('f_mp4', 'f_auto');
+    }
     return "";
   };
 
   const selectedVideoId = getYouTubeId(selectedProject?.videoUrl);
-  const isSingleImage = selectedProject && !selectedVideoId && !selectedProject.images?.length;
+  const isCloudinary = isCloudinaryVideo(selectedProject?.videoUrl);
+  const isSingleImage = selectedProject && !selectedVideoId && !isCloudinary && !selectedProject.images?.length;
 
   return (
     <section className="py-16 px-4 max-w-6xl mx-auto w-full overflow-hidden">
@@ -394,14 +404,25 @@ export default function PortfolioSection({ title, description, projects }: Portf
                 {selectedProject.isVertical ? (
                   <>
                     <div className="md:w-1/2 min-h-[300px] bg-black flex items-center justify-center py-4">
-                      {selectedVideoId && (
+                      {selectedVideoId ? (
                         <iframe
                           src={`https://www.youtube.com/embed/${selectedVideoId}?autoplay=1&mute=1&loop=1&playlist=${selectedVideoId}&controls=0`}
                           className="h-full w-auto aspect-[9/16] rounded-md"
                           allow="autoplay; encrypted-media"
                           allowFullScreen
                         />
-                      )}
+                      ) : isCloudinary ? (
+                        <video 
+                          src={selectedProject.videoUrl} 
+                          autoPlay 
+                          loop 
+                          muted 
+                          playsInline 
+                          controls
+                          preload="auto"
+                          className="h-full w-auto aspect-[9/16] rounded-md object-contain max-h-[80vh]"
+                        />
+                      ) : null}
                     </div>
                     <div className="p-8 md:w-1/2 flex flex-col overflow-y-auto max-h-[90vh] custom-scrollbar">
                       <h3 className="text-2xl font-bold mb-4 text-purple-400">
@@ -446,7 +467,7 @@ export default function PortfolioSection({ title, description, projects }: Portf
                   /* ── HORIZONTAL VIDEO ── */
                   <>
                     <div className="w-full bg-black">
-                      {selectedVideoId && (
+                      {selectedVideoId ? (
                         <div className="aspect-video w-full">
                           <iframe
                             src={`https://www.youtube.com/embed/${selectedVideoId}?autoplay=1&mute=1&loop=1&playlist=${selectedVideoId}&controls=0`}
@@ -455,7 +476,20 @@ export default function PortfolioSection({ title, description, projects }: Portf
                             allowFullScreen
                           />
                         </div>
-                      )}
+                      ) : isCloudinary ? (
+                        <div className="aspect-video w-full">
+                          <video 
+                            src={selectedProject.videoUrl} 
+                            autoPlay 
+                            loop 
+                            muted 
+                            playsInline 
+                            controls
+                            preload="auto"
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                      ) : null}
                     </div>
                     <div className="p-8 flex flex-col overflow-y-auto flex-1 custom-scrollbar">
                       <h3 className="text-2xl font-bold mb-4 text-purple-400">

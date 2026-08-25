@@ -40,7 +40,7 @@ export default function Contact() {
   const { t } = useLanguage();
 
   return (
-    <footer id="contato" className="py-24 px-4 border-t border-zinc-900 bg-black relative overflow-hidden">
+    <footer id="contato" className="py-24 px-4 border-t border-zinc-900 relative overflow-hidden">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-purple-900 to-transparent opacity-50" />
       
       <div className="max-w-4xl mx-auto text-center relative z-10">

@@ -19,7 +19,7 @@ const pt = {
     clickToExpand: "Clique para ver processo criativo",
     close: "Fechar",
     internship: "Estágio",
-    internshipDesc: "Trabalhos institucionais focados em clareza, design limpo e engajamento.",
+    internshipDesc: "Trabalhos institucionais focados em clareza, design limpo e engajamento. Todos foram realizados enquanto eu atuava na DF‑Previcom, a previdência complementar para servidores públicos do Distrito Federal.",
     projectsDesc: "Estudos técnicos e narrativos explorando as possibilidades da edição visual.",
     navHome: "Início",
     navContato: "Contato"

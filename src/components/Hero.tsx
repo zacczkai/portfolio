@@ -67,7 +67,7 @@ export default function Hero() {
         {/* Right: Photo placeholder */}
         <motion.div
           variants={fadeUp}
-          className="relative h-[480px] rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800 group hidden md:flex items-center justify-center"
+          className="relative h-[300px] md:h-[480px] rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800 group flex items-center justify-center"
         >
           <img 
             src="/images/minha foto.jpeg" 

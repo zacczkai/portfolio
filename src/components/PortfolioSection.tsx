@@ -35,6 +35,7 @@ function YTThumbnail({
   const fallbacks = [
     `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
     `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+    `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`,
     `https://img.youtube.com/vi/${videoId}/0.jpg`,
   ];
   const [srcIndex, setSrcIndex] = useState(0);

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import LanguageToggle from "@/components/LanguageToggle";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface NavLink {
@@ -45,7 +46,7 @@ export default function Navbar() {
           setActiveSection(visible[0].target.id);
         }
       },
-      { threshold: [0.1, 0.3, 0.5], rootMargin: "-64px 0px 0px 0px" }
+      { threshold: [0.1, 0.3, 0.5], rootMargin: "-64px 0px -200px 0px" }
     );
 
     elements.forEach((el) => observer.observe(el));
@@ -117,7 +118,7 @@ export default function Navbar() {
         {/* ── Mobile navbar ── */}
         <div className="md:hidden flex items-center justify-between px-4 h-14">
           {/* Logo / initials */}
-          <span className="text-purple-400 font-bold text-lg tracking-tight">EG</span>
+          <LanguageToggle />
 
           {/* Active section indicator */}
           <motion.span

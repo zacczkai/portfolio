@@ -28,8 +28,11 @@ export default function RootLayout({
     <html lang="pt" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className="antialiased">
         <LanguageProvider>
+        <div className="relative">
+          <div className="glow-bg" aria-hidden="true"></div>
           {children}
-        </LanguageProvider>
+        </div>
+      </LanguageProvider>
       </body>
     </html>
   );

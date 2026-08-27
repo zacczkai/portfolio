@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import useEmblaCarousel from "embla-carousel-react";
+import Image from "next/image";
 
 export interface Project {
   id: string;
@@ -41,9 +42,11 @@ function YTThumbnail({
   const [srcIndex, setSrcIndex] = useState(0);
 
   return (
-    <img
+    <Image
       src={fallbacks[srcIndex]}
       alt={alt}
+      fill
+      sizes="(max-width: 768px) 286px, 320px"
       className={className}
       onLoad={(e) => {
         if ((e.target as HTMLImageElement).naturalWidth === 120 && srcIndex < fallbacks.length - 1) {
@@ -60,7 +63,8 @@ function YTThumbnail({
 }
 
 /* ── Instagram-style image slider inside modal ── */
-function ImageSlider({ images }: { images: string[] }) {
+function ImageSlider({ images, title }: { images: string[]; title: string }) {
+  const { t } = useLanguage();
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
@@ -75,10 +79,11 @@ function ImageSlider({ images }: { images: string[] }) {
 
   useEffect(() => {
     if (!emblaApi) return;
-    onSelect();
+    const frame = window.requestAnimationFrame(onSelect);
     emblaApi.on("select", onSelect);
     emblaApi.on("reInit", onSelect);
     return () => {
+      window.cancelAnimationFrame(frame);
       emblaApi.off("select", onSelect);
       emblaApi.off("reInit", onSelect);
     };
@@ -90,7 +95,14 @@ function ImageSlider({ images }: { images: string[] }) {
         <div className="flex">
           {images.map((src, i) => (
             <div key={i} className="flex-[0_0_100%] min-w-0 flex items-center justify-center bg-zinc-950">
-              <img src={src} alt={`Slide ${i + 1}`} className="w-full h-auto" />
+              <Image
+                src={src}
+                alt={`${title} — ${t.sections.slide} ${i + 1}`}
+                width={1080}
+                height={1350}
+                sizes="(max-width: 768px) 100vw, 512px"
+                className="h-auto w-full"
+              />
             </div>
           ))}
         </div>
@@ -98,32 +110,37 @@ function ImageSlider({ images }: { images: string[] }) {
 
       {canScrollPrev && (
         <button
+          type="button"
+          aria-label={t.sections.previousSlide}
           onClick={() => emblaApi?.scrollPrev()}
-          className="absolute left-3 top-1/2 -translate-y-1/2 p-1.5 bg-black/50 hover:bg-purple-900/80 rounded-full text-white transition-colors z-10 backdrop-blur-sm"
+          className="absolute left-3 top-1/2 z-10 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-colors hover:bg-lime-300/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
       )}
       {canScrollNext && (
         <button
+          type="button"
+          aria-label={t.sections.nextSlide}
           onClick={() => emblaApi?.scrollNext()}
-          className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 bg-black/50 hover:bg-purple-900/80 rounded-full text-white transition-colors z-10 backdrop-blur-sm"
+          className="absolute right-3 top-1/2 z-10 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-colors hover:bg-lime-300/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300"
         >
           <ChevronRight className="w-5 h-5" />
         </button>
       )}
 
       <div className="flex items-center justify-center gap-1.5 py-3">
-        {images.map((_, i) => (
+          {images.map((_, i) => (
           <button
             key={i}
+            type="button"
+            aria-label={`${t.sections.slide} ${i + 1}`}
+            aria-current={i === selectedIndex ? "true" : undefined}
             onClick={() => emblaApi?.scrollTo(i)}
-            className={`rounded-full transition-all duration-300 ${
-              i === selectedIndex
-                ? "w-2.5 h-2.5 bg-purple-500"
-                : "w-1.5 h-1.5 bg-zinc-600 hover:bg-zinc-400"
-            }`}
-          />
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300"
+          >
+            <span className={`rounded-full transition-all duration-300 ${i === selectedIndex ? "h-2.5 w-2.5 bg-lime-300" : "h-1.5 w-1.5 bg-zinc-600"}`} />
+          </button>
         ))}
       </div>
     </div>
@@ -141,16 +158,29 @@ function useScrollProgress(emblaApi: ReturnType<typeof useEmblaCarousel>[1]) {
 
   useEffect(() => {
     if (!emblaApi) return;
-    onScroll();
+    const frame = window.requestAnimationFrame(onScroll);
     emblaApi.on("scroll", onScroll);
     emblaApi.on("reInit", onScroll);
     return () => {
+      window.cancelAnimationFrame(frame);
       emblaApi.off("scroll", onScroll);
       emblaApi.off("reInit", onScroll);
     };
   }, [emblaApi, onScroll]);
 
   return progress;
+}
+
+function ProjectDescription({ description, projectId }: { description?: React.ReactNode | string; projectId: string }) {
+  if (typeof description !== "string") {
+    return <div id={`project-${projectId}-description`} className="space-y-3 text-sm leading-relaxed text-zinc-300">{description}</div>;
+  }
+
+  return (
+    <div id={`project-${projectId}-description`} className="space-y-3 text-sm leading-relaxed text-zinc-300">
+      {description.split(/\n\n+/).map((paragraph, index) => <p key={`${projectId}-${index}`}>{paragraph}</p>)}
+    </div>
+  );
 }
 
 /* ── Shared card renderer ── */
@@ -173,43 +203,50 @@ function ProjectCard({
   const thumb = getThumbnail(project);
 
   return (
-    <motion.div
+    <motion.article
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.08, duration: 0.5 }}
       whileHover={{ y: -8, transition: { type: "spring", stiffness: 400, damping: 15 } }}
-      onClick={onClick}
-      className="relative flex-shrink-0 w-72 md:w-80 h-96 rounded-2xl overflow-hidden cursor-pointer group border border-zinc-800 bg-zinc-900 select-none"
+      className="group relative h-96 w-72 flex-shrink-0 select-none overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900 md:w-80"
     >
       <div className="absolute inset-0 bg-zinc-800">
         {ytId ? (
-          <YTThumbnail videoId={ytId} alt={project.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+          <YTThumbnail videoId={ytId} alt={project.title} className="object-cover transition-transform duration-700 group-hover:scale-110" />
         ) : thumb ? (
-          <img
+          <Image
             src={thumb}
             alt={project.title}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            fill
+            sizes="(max-width: 768px) 286px, 320px"
+            className="object-cover transition-transform duration-700 group-hover:scale-110"
             onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
           />
         ) : null}
       </div>
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent group-hover:via-purple-900/10 transition-all duration-500" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent transition-all duration-500 group-hover:via-lime-300/10" />
       <div className="absolute bottom-0 left-0 p-6 w-full">
-        <h3 className="text-xl font-bold text-white mb-1 group-hover:text-purple-400 transition-colors duration-300">
+        <h3 className="mb-1 text-xl font-bold text-white transition-colors duration-300 group-hover:text-lime-300">
           {project.title}
         </h3>
-        <p className="text-xs text-zinc-400 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+        <p className="translate-y-0 text-xs text-zinc-300 transition-all duration-300 md:translate-y-2 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100">
           {clickLabel}
         </p>
       </div>
 
       {project.images && project.images.length > 1 && (
-        <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full border border-zinc-700">
+        <div className="absolute right-4 top-4 rounded-full border border-zinc-700 bg-black/60 px-2 py-1 text-xs text-white backdrop-blur-sm">
           {project.images.length} slides
         </div>
       )}
-    </motion.div>
+      <button
+        type="button"
+        aria-label={`${project.title}. ${clickLabel}`}
+        onClick={onClick}
+        className="absolute inset-0 z-10 cursor-pointer rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300 focus-visible:ring-inset"
+      />
+    </motion.article>
   );
 }
 
@@ -224,6 +261,8 @@ export default function PortfolioSection({ title, description, projects }: Portf
   const [isScrollable, setIsScrollable] = useState(true);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousModalFocusRef = useRef<HTMLElement | null>(null);
 
   const scrollProgress = useScrollProgress(emblaApi);
   const selectedProject = projects.find((p) => p.id === selectedId);
@@ -238,16 +277,21 @@ export default function PortfolioSection({ title, description, projects }: Portf
   useEffect(() => {
     if (!emblaApi) return;
     const canScroll = emblaApi.canScrollNext() || emblaApi.canScrollPrev();
-    setIsScrollable(canScroll);
-    onSelect();
+    const frame = window.requestAnimationFrame(() => {
+      setIsScrollable(canScroll);
+      onSelect();
+    });
     emblaApi.on("select", onSelect);
-    emblaApi.on("reInit", () => {
+    const handleReInit = () => {
       const cs = emblaApi.canScrollNext() || emblaApi.canScrollPrev();
       setIsScrollable(cs);
       onSelect();
-    });
+    };
+    emblaApi.on("reInit", handleReInit);
     return () => {
+      window.cancelAnimationFrame(frame);
       emblaApi.off("select", onSelect);
+      emblaApi.off("reInit", handleReInit);
     };
   }, [emblaApi, onSelect]);
 
@@ -280,6 +324,43 @@ export default function PortfolioSection({ title, description, projects }: Portf
   const isCloudinary = isCloudinaryVideo(selectedProject?.videoUrl);
   const isSingleImage = selectedProject && !selectedVideoId && !isCloudinary && !selectedProject.images?.length;
 
+  useEffect(() => {
+    if (!selectedId) return;
+
+    previousModalFocusRef.current = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const frame = window.requestAnimationFrame(() => modalRef.current?.focus());
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSelectedId(null);
+        return;
+      }
+
+      if (event.key !== "Tab" || !modalRef.current) return;
+      const focusable = modalRef.current.querySelectorAll<HTMLElement>("button, a[href], iframe, video[controls]");
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+      previousModalFocusRef.current?.focus();
+    };
+  }, [selectedId]);
+
   return (
     <section className="py-16 px-4 max-w-6xl mx-auto w-full overflow-hidden">
       <motion.div
@@ -309,7 +390,7 @@ export default function PortfolioSection({ title, description, projects }: Portf
                   onClick={() => setSelectedId(project.id)}
                   getThumbnail={getThumbnail}
                   getYouTubeId={getYouTubeId}
-                  clickLabel={t.sections.clickToExpand}
+                  clickLabel={t.sections.viewProcess}
                 />
               ))}
             </div>
@@ -319,7 +400,9 @@ export default function PortfolioSection({ title, description, projects }: Portf
           {canScrollPrev && (
             <button
               onClick={() => emblaApi?.scrollPrev()}
-              className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 p-3 bg-black/70 hover:bg-purple-900/80 text-white rounded-full transition-all backdrop-blur-sm opacity-0 group-hover/carousel:opacity-100 -translate-x-2 group-hover/carousel:translate-x-0"
+              aria-label={t.sections.previousSlide}
+              type="button"
+              className="hidden md:flex absolute left-0 top-1/2 z-10 h-11 w-11 -translate-x-2 -translate-y-1/2 items-center justify-center rounded-full bg-black/70 text-white opacity-0 backdrop-blur-sm transition-all hover:bg-lime-300/15 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300 group-hover/carousel:translate-x-0 group-hover/carousel:opacity-100"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
@@ -327,7 +410,9 @@ export default function PortfolioSection({ title, description, projects }: Portf
           {canScrollNext && (
             <button
               onClick={() => emblaApi?.scrollNext()}
-              className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 p-3 bg-black/70 hover:bg-purple-900/80 text-white rounded-full transition-all backdrop-blur-sm opacity-0 group-hover/carousel:opacity-100 translate-x-2 group-hover/carousel:translate-x-0"
+              aria-label={t.sections.nextSlide}
+              type="button"
+              className="hidden md:flex absolute right-0 top-1/2 z-10 h-11 w-11 translate-x-2 -translate-y-1/2 items-center justify-center rounded-full bg-black/70 text-white opacity-0 backdrop-blur-sm transition-all hover:bg-lime-300/15 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300 group-hover/carousel:translate-x-0 group-hover/carousel:opacity-100"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
@@ -340,7 +425,7 @@ export default function PortfolioSection({ title, description, projects }: Portf
             className="mt-6 h-[2px] bg-zinc-800 rounded-full overflow-hidden"
           >
             <motion.div
-              className="h-full bg-gradient-to-r from-purple-600 to-purple-400 rounded-full"
+              className="h-full rounded-full bg-lime-300"
               style={{ width: `${Math.max(scrollProgress * 100, 8)}%` }}
             />
           </motion.div>
@@ -356,7 +441,7 @@ export default function PortfolioSection({ title, description, projects }: Portf
               onClick={() => setSelectedId(project.id)}
               getThumbnail={getThumbnail}
               getYouTubeId={getYouTubeId}
-              clickLabel={t.sections.clickToExpand}
+              clickLabel={t.sections.viewProcess}
             />
           ))}
         </div>
@@ -366,13 +451,16 @@ export default function PortfolioSection({ title, description, projects }: Portf
       <AnimatePresence>
         {selectedId && selectedProject && (
           <>
-            <motion.div
+            <motion.button
+              type="button"
+              tabIndex={-1}
+              aria-label={t.sections.close}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={() => setSelectedId(null)}
-              className="fixed inset-0 bg-black/85 z-50 backdrop-blur-md cursor-pointer"
+              className="fixed inset-0 z-50 cursor-pointer bg-black/85 backdrop-blur-md"
             />
 
             <motion.div
@@ -383,7 +471,13 @@ export default function PortfolioSection({ title, description, projects }: Portf
               className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
             >
               <div
-                className={`bg-zinc-900 rounded-2xl overflow-hidden pointer-events-auto shadow-2xl border border-zinc-800 relative ${
+                ref={modalRef}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby={`project-${selectedProject.id}-title`}
+                aria-describedby={`project-${selectedProject.id}-description`}
+                tabIndex={-1}
+                    className={`relative pointer-events-auto flex max-h-[90vh] overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900 shadow-lg ${
                   selectedProject.isVertical
                     ? "w-full max-w-5xl max-h-[90vh] flex flex-col md:flex-row"
                     : selectedProject.images?.length
@@ -394,10 +488,12 @@ export default function PortfolioSection({ title, description, projects }: Portf
                 }`}
               >
                 <button
+                  type="button"
+                  aria-label={t.sections.close}
                   onClick={() => setSelectedId(null)}
-                  className="absolute top-4 right-4 z-20 p-2 bg-black/60 hover:bg-purple-900 text-white rounded-full transition-colors"
+                  className="absolute right-4 top-4 z-20 inline-flex h-11 w-11 items-center justify-center rounded-full bg-black/60 text-white transition-colors hover:bg-lime-300/20 hover:text-lime-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="h-5 w-5" aria-hidden="true" />
                 </button>
 
                 {/* ── VERTICAL VIDEO: side-by-side ── */}
@@ -406,6 +502,7 @@ export default function PortfolioSection({ title, description, projects }: Portf
                     <div className="md:w-1/2 min-h-[300px] bg-black flex items-center justify-center py-4">
                       {selectedVideoId ? (
                         <iframe
+                          title={selectedProject.title}
                           src={`https://www.youtube.com/embed/${selectedVideoId}?autoplay=1&mute=1&loop=1&playlist=${selectedVideoId}&controls=0`}
                           className="h-full w-auto aspect-[9/16] rounded-md"
                           allow="autoplay; encrypted-media"
@@ -419,48 +516,46 @@ export default function PortfolioSection({ title, description, projects }: Portf
                           muted 
                           playsInline 
                           controls
-                          preload="auto"
+                          preload="metadata"
+                          poster={getThumbnail(selectedProject)}
                           className="h-full w-auto aspect-[9/16] rounded-md object-contain max-h-[80vh]"
                         />
                       ) : null}
                     </div>
                     <div className="p-8 md:w-1/2 flex flex-col overflow-y-auto max-h-[90vh] custom-scrollbar">
-                      <h3 className="text-2xl font-bold mb-4 text-purple-400">
+                      <h3 id={`project-${selectedProject.id}-title`} className="text-2xl font-bold mb-4 text-lime-300">
                         {selectedProject.title}
                       </h3>
-                      <div className="text-zinc-300 leading-relaxed space-y-3 text-sm">
-                        {selectedProject.description}
-                      </div>
+                      <ProjectDescription description={selectedProject.description} projectId={selectedProject.id} />
                     </div>
                   </>
                 ) : selectedProject.images && selectedProject.images.length > 0 ? (
                   /* ── INSTAGRAM CAROUSEL ── */
                   <>
-                    <ImageSlider images={selectedProject.images} />
+                    <ImageSlider images={selectedProject.images} title={selectedProject.title} />
                     <div className="p-6 flex flex-col overflow-y-auto flex-1 custom-scrollbar">
-                      <h3 className="text-xl font-bold mb-3 text-purple-400">
+                      <h3 id={`project-${selectedProject.id}-title`} className="text-xl font-bold mb-3 text-lime-300">
                         {selectedProject.title}
                       </h3>
-                      <div className="text-zinc-300 leading-relaxed space-y-3 text-sm">
-                        {selectedProject.description}
-                      </div>
+                      <ProjectDescription description={selectedProject.description} projectId={selectedProject.id} />
                     </div>
                   </>
                 ) : isSingleImage ? (
                   /* ── SINGLE IMAGE ── */
                   <>
-                    <img
+                    <Image
                       src={getThumbnail(selectedProject)}
                       alt={selectedProject.title}
-                      className="w-full h-auto"
+                      width={1080}
+                      height={1350}
+                      sizes="(max-width: 768px) 100vw, 512px"
+                      className="h-auto w-full"
                     />
                     <div className="p-6 flex flex-col overflow-y-auto flex-1 custom-scrollbar">
-                      <h3 className="text-xl font-bold mb-3 text-purple-400">
+                      <h3 id={`project-${selectedProject.id}-title`} className="text-xl font-bold mb-3 text-lime-300">
                         {selectedProject.title}
                       </h3>
-                      <div className="text-zinc-300 leading-relaxed space-y-3 text-sm">
-                        {selectedProject.description}
-                      </div>
+                      <ProjectDescription description={selectedProject.description} projectId={selectedProject.id} />
                     </div>
                   </>
                 ) : (
@@ -469,7 +564,8 @@ export default function PortfolioSection({ title, description, projects }: Portf
                     <div className="w-full bg-black">
                       {selectedVideoId ? (
                         <div className="aspect-video w-full">
-                          <iframe
+                        <iframe
+                          title={selectedProject.title}
                             src={`https://www.youtube.com/embed/${selectedVideoId}?autoplay=1&mute=1&loop=1&playlist=${selectedVideoId}&controls=0`}
                             className="w-full h-full"
                             allow="autoplay; encrypted-media"
@@ -485,19 +581,18 @@ export default function PortfolioSection({ title, description, projects }: Portf
                             muted 
                             playsInline 
                             controls
-                            preload="auto"
+                            preload="metadata"
+                            poster={getThumbnail(selectedProject)}
                             className="w-full h-full object-contain"
                           />
                         </div>
                       ) : null}
                     </div>
                     <div className="p-8 flex flex-col overflow-y-auto flex-1 custom-scrollbar">
-                      <h3 className="text-2xl font-bold mb-4 text-purple-400">
+                      <h3 id={`project-${selectedProject.id}-title`} className="text-2xl font-bold mb-4 text-lime-300">
                         {selectedProject.title}
                       </h3>
-                      <div className="text-zinc-300 leading-relaxed space-y-3 text-sm">
-                        {selectedProject.description}
-                      </div>
+                      <ProjectDescription description={selectedProject.description} projectId={selectedProject.id} />
                     </div>
                   </>
                 )}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import LanguageToggle from "@/components/LanguageToggle";
@@ -16,73 +16,89 @@ export default function Navbar() {
   const { t } = useLanguage();
   const [activeSection, setActiveSection] = useState("hero");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
-  const links: NavLink[] = [
+  const links = useMemo<NavLink[]>(() => [
     { id: "hero", href: "#hero", label: t.sections.navHome },
     { id: "datas-comemorativas", href: "#datas-comemorativas", label: t.sections.datasComemorativas },
     { id: "carrossel", href: "#carrossel", label: t.sections.carrossel },
     { id: "videos", href: "#videos", label: t.sections.videosEventos },
     { id: "projetos", href: "#projetos", label: t.sections.projects },
     { id: "contato", href: "#contato", label: t.sections.navContato },
-  ];
+  ], [t]);
 
-  // Scroll listener to track active section
   useEffect(() => {
-    const sectionIds = ["hero", "datas-comemorativas", "carrossel", "videos", "projetos", "contato"];
-    
+    const sectionIds = links.map((link) => link.id);
     const handleScroll = () => {
-      // If at absolute top, reset to hero
       if (window.scrollY < 50) {
         setActiveSection("hero");
         return;
       }
 
-      // Find which section is currently occupying the top part of the viewport (under navbar)
-      for (let i = sectionIds.length - 1; i >= 0; i--) {
-        const el = document.getElementById(sectionIds[i]);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          // We consider a section active if its top is above the middle of the screen (or just passed the navbar)
-          // 200px is a good threshold below the top of the viewport
-          if (rect.top <= 200) {
-            setActiveSection(sectionIds[i]);
-            break;
-          }
+      for (let i = sectionIds.length - 1; i >= 0; i -= 1) {
+        const element = document.getElementById(sectionIds[i]);
+        if (element && element.getBoundingClientRect().top <= 200) {
+          setActiveSection(sectionIds[i]);
+          break;
         }
       }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // initial check
-    
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [links]);
+
+  const closeDrawer = useCallback(() => setIsDrawerOpen(false), []);
 
   const scrollTo = useCallback(
-    (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-      e.preventDefault();
-      setIsDrawerOpen(false);
-      const target = document.querySelector(href);
-      if (target) {
-        target.scrollIntoView({ behavior: "smooth" });
-      }
+    (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+      event.preventDefault();
+      closeDrawer();
+      document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
     },
-    []
+    [closeDrawer]
   );
 
-  // Lock body scroll when drawer is open
   useEffect(() => {
-    if (isDrawerOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isDrawerOpen]);
+    if (!isDrawerOpen) return;
 
-  const activeLabel = links.find((l) => l.id === activeSection)?.label || "";
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+    closeButtonRef.current?.focus();
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closeDrawer();
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+      const focusable = document.querySelectorAll<HTMLElement>("#mobile-menu button, #mobile-menu a[href]");
+      if (!focusable.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+      previousFocusRef.current?.focus();
+    };
+  }, [closeDrawer, isDrawerOpen]);
+
+  const activeLabel = links.find((link) => link.id === activeSection)?.label || "";
 
   return (
     <>
@@ -90,20 +106,19 @@ export default function Navbar() {
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="fixed top-0 left-0 right-0 z-40 bg-black/60 backdrop-blur-lg border-b border-zinc-900"
+        aria-label={t.sections.menu}
+        className="fixed left-0 right-0 top-0 z-40 border-b border-zinc-900 bg-black/75 backdrop-blur-lg"
       >
-        {/* ── Desktop navbar ── */}
-        <div className="hidden md:block max-w-6xl mx-auto px-4">
-          <ul className="flex items-center justify-center gap-8 h-14 text-sm font-medium">
+        <div className="relative mx-auto hidden h-14 max-w-6xl items-center px-4 md:flex">
+          <ul className="flex w-full items-center justify-center gap-5 pr-24 text-sm font-medium lg:gap-8">
             {links.map((link) => (
-              <li key={link.id} className="relative">
+              <li key={link.id} className="relative shrink-0">
                 <a
                   href={link.href}
-                  onClick={(e) => scrollTo(e, link.href)}
-                  className={`transition-colors duration-200 ${
-                    activeSection === link.id
-                      ? "text-purple-400"
-                      : "text-zinc-400 hover:text-zinc-200"
+                  onClick={(event) => scrollTo(event, link.href)}
+                  aria-current={activeSection === link.id ? "page" : undefined}
+                  className={`inline-flex min-h-11 items-center transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300 focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
+                    activeSection === link.id ? "text-lime-300" : "text-zinc-400 hover:text-zinc-100"
                   }`}
                 >
                   {link.label}
@@ -111,90 +126,86 @@ export default function Navbar() {
                 {activeSection === link.id && (
                   <motion.div
                     layoutId="navbar-underline"
-                    className="absolute -bottom-[1px] left-0 right-0 h-[2px] bg-purple-500 rounded-full"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-lime-300"
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   />
                 )}
               </li>
             ))}
           </ul>
+          <LanguageToggle className="absolute right-4 top-1.5" />
         </div>
 
-        {/* ── Mobile navbar ── */}
-        <div className="md:hidden flex items-center justify-between px-4 h-14">
-          {/* Logo / initials */}
-          <LanguageToggle />
-
-          {/* Active section indicator */}
+        <div className="flex h-14 items-center justify-between gap-3 px-4 md:hidden">
+          <LanguageToggle className="static shrink-0" />
           <motion.span
             key={activeLabel}
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-zinc-300 text-sm font-medium truncate max-w-[180px] text-center"
+            className="min-w-0 flex-1 truncate text-center text-sm font-medium text-zinc-300"
           >
             {activeLabel}
           </motion.span>
-
-          {/* Hamburger */}
           <button
-            onClick={() => setIsDrawerOpen(!isDrawerOpen)}
-            className="p-2 text-zinc-400 hover:text-purple-400 transition-colors"
+            type="button"
+            aria-label={isDrawerOpen ? t.sections.closeMenu : t.sections.openMenu}
+            aria-expanded={isDrawerOpen}
+            aria-controls="mobile-menu"
+            onClick={() => setIsDrawerOpen((open) => !open)}
+            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-zinc-300 transition-colors hover:bg-zinc-800 hover:text-lime-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300"
           >
-            {isDrawerOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {isDrawerOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
           </button>
         </div>
       </motion.nav>
 
-      {/* ── Mobile drawer ── */}
       <AnimatePresence>
         {isDrawerOpen && (
           <>
-            {/* Backdrop */}
-            <motion.div
+            <motion.button
+              type="button"
+              aria-label={t.sections.closeMenu}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              onClick={() => setIsDrawerOpen(false)}
-              className="fixed inset-0 bg-black/60 z-40 md:hidden"
+              onClick={closeDrawer}
+              className="fixed inset-0 z-40 bg-black/70 md:hidden"
             />
-
-            {/* Drawer panel */}
             <motion.div
+              id="mobile-menu"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="mobile-menu-title"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", stiffness: 400, damping: 35 }}
-              className="fixed top-0 right-0 bottom-0 w-72 bg-zinc-950 border-l border-zinc-800 z-50 md:hidden flex flex-col"
+              className="fixed bottom-0 right-0 top-0 z-50 flex w-[min(20rem,88vw)] flex-col border-l border-zinc-800 bg-zinc-950 md:hidden"
             >
-              {/* Drawer header */}
-              <div className="flex items-center justify-between px-6 h-14 border-b border-zinc-800">
-                <span className="text-purple-400 font-bold text-lg">Menu</span>
+              <div className="flex h-14 items-center justify-between border-b border-zinc-800 px-6">
+                <span id="mobile-menu-title" className="text-lg font-bold text-lime-300">{t.sections.menu}</span>
                 <button
-                  onClick={() => setIsDrawerOpen(false)}
-                  className="p-2 text-zinc-400 hover:text-purple-400 transition-colors"
+                  ref={closeButtonRef}
+                  type="button"
+                  aria-label={t.sections.closeMenu}
+                  onClick={closeDrawer}
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-full text-zinc-300 transition-colors hover:bg-zinc-800 hover:text-lime-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="h-5 w-5" aria-hidden="true" />
                 </button>
               </div>
-
-              {/* Drawer links */}
-              <nav className="flex-1 py-6 px-6">
+              <nav aria-label={t.sections.menu} className="flex-1 px-6 py-6">
                 <ul className="space-y-2">
                   {links.map((link, index) => (
-                    <motion.li
-                      key={link.id}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                    >
+                    <motion.li key={link.id} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.05 }}>
                       <a
                         href={link.href}
-                        onClick={(e) => scrollTo(e, link.href)}
-                        className={`block py-3 px-4 rounded-xl text-base font-medium transition-all ${
+                        onClick={(event) => scrollTo(event, link.href)}
+                        aria-current={activeSection === link.id ? "page" : undefined}
+                        className={`block rounded-xl px-4 py-3 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300 ${
                           activeSection === link.id
-                            ? "text-purple-400 bg-purple-500/10 border border-purple-500/20"
-                            : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900"
+                            ? "border border-lime-300/20 bg-lime-300/10 text-lime-300"
+                            : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100"
                         }`}
                       >
                         {link.label}
@@ -203,11 +214,9 @@ export default function Navbar() {
                   ))}
                 </ul>
               </nav>
-
-              {/* Drawer footer */}
-              <div className="px-6 py-4 border-t border-zinc-800">
-                <p className="text-xs text-zinc-600 text-center">Enzo Guerreiro © {new Date().getFullYear()}</p>
-              </div>
+              <p className="border-t border-zinc-800 px-6 py-4 text-center text-xs text-zinc-600">
+                Enzo Guerreiro © {new Date().getFullYear()}
+              </p>
             </motion.div>
           </>
         )}

@@ -4,7 +4,10 @@ const en = {
     line1: "Creativity guided by",
     line2: "technique.",
     description: "I study Advertising and operate at the intersection of design, audiovisual, and strategy. I have a passion for technical execution: from meticulous color grading to clean institutional layouts. My goal is to deliver clear messages with high aesthetic standards for any format or platform.",
-    photoAlt: "Photo of Enzo Guerreiro"
+    photoAlt: "Photo of Enzo Guerreiro",
+    workCta: "Explore original projects",
+    contactCta: "Let’s talk",
+    photoCaption: "Art direction · motion · sound design"
   },
   sections: {
     datasComemorativas: "Commemorative Dates",
@@ -22,12 +25,26 @@ const en = {
     internshipDesc: "Institutional work focused on clarity, clean design, and engagement.",
     projectsDesc: "Technical and narrative studies exploring the possibilities of visual editing.",
     navHome: "Home",
-    navContato: "Contact"
+    navContato: "Contact",
+    menu: "Menu",
+    openMenu: "Open menu",
+    closeMenu: "Close menu",
+    nextSlide: "Next slide",
+    previousSlide: "Previous slide",
+    slide: "Slide",
+    viewProcess: "Open creative process"
   },
   contact: {
     title1: "Let's work",
     title2: "together?",
-    rights: "All rights reserved."
+    rights: "All rights reserved.",
+    emailLabel: "Send an email",
+    linkedinLabel: "Open LinkedIn",
+    behanceLabel: "Open Behance"
+  },
+  meta: {
+    title: "Enzo Guerreiro | Advertising, Design and Motion Graphics",
+    description: "Original portfolio by Enzo Guerreiro, exploring art direction, motion graphics, editing, sound design and color grading."
   },
   tags: {
     artDirection: "Art Direction"

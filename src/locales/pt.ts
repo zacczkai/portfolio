@@ -4,7 +4,10 @@ const pt = {
     line1: "Criatividade guiada pela",
     line2: "técnica.",
     description: "Estudo Publicidade e atuo na intersecção entre design, audiovisual e estratégia. Tenho paixão pela execução técnica: do color grading minucioso ao layout institucional limpo. Meu objetivo é entregar mensagens claras e com alto padrão estético para qualquer formato ou plataforma.",
-    photoAlt: "Foto de Enzo Guerreiro"
+    photoAlt: "Foto de Enzo Guerreiro",
+    workCta: "Explorar projetos autorais",
+    contactCta: "Vamos conversar",
+    photoCaption: "Direção de arte · motion · sound design"
   },
   sections: {
     datasComemorativas: "Datas Comemorativas",
@@ -22,12 +25,26 @@ const pt = {
     internshipDesc: "Trabalhos institucionais focados em clareza, design limpo e engajamento. Todos foram realizados enquanto eu atuava na DF‑Previcom, a previdência complementar para servidores públicos do Distrito Federal.",
     projectsDesc: "Estudos técnicos e narrativos explorando as possibilidades da edição visual.",
     navHome: "Início",
-    navContato: "Contato"
+    navContato: "Contato",
+    menu: "Menu",
+    openMenu: "Abrir menu",
+    closeMenu: "Fechar menu",
+    nextSlide: "Próximo slide",
+    previousSlide: "Slide anterior",
+    slide: "Slide",
+    viewProcess: "Abrir processo criativo"
   },
   contact: {
     title1: "Vamos trabalhar",
     title2: "juntos?",
-    rights: "Todos os direitos reservados."
+    rights: "Todos os direitos reservados.",
+    emailLabel: "Enviar e-mail",
+    linkedinLabel: "Abrir LinkedIn",
+    behanceLabel: "Abrir Behance"
+  },
+  meta: {
+    title: "Enzo Guerreiro | Publicidade, Design e Motion Graphics",
+    description: "Portfólio autoral de Enzo Guerreiro, explorando direção de arte, motion graphics, edição, sound design e color grading."
   },
   tags: {
     artDirection: "Direção de Arte"

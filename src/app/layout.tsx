@@ -15,8 +15,18 @@ const geistMono = Geist_Mono({
 import { LanguageProvider } from "@/context/LanguageContext";
 
 export const metadata: Metadata = {
-  title: "Enzo Guerreiro | Portfolio de Publicidade, Design e Motion Graphics",
-  description: "Portfolio de Enzo Guerreiro. Especialista em Publicidade e Propaganda, Direção de Arte, Motion Graphics e Color Grading.",
+  metadataBase: new URL("https://www.enzoguerreiro.com.br"),
+  title: "Enzo Guerreiro | Publicidade, Design e Motion Graphics",
+  description: "Portfólio autoral de Enzo Guerreiro, explorando direção de arte, motion graphics, edição, sound design e color grading.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "Enzo Guerreiro | Publicidade, Design e Motion Graphics",
+    description: "Portfólio autoral de Enzo Guerreiro.",
+    url: "https://www.enzoguerreiro.com.br/",
+    siteName: "Enzo Guerreiro",
+    locale: "pt_BR",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

@@ -2,13 +2,19 @@
 
 import Hero from "@/components/Hero";
 import Contact from "@/components/Contact";
-import LanguageToggle from "@/components/LanguageToggle";
 import PortfolioSection, { Project } from "@/components/PortfolioSection";
 import { useLanguage } from "@/context/LanguageContext";
 import Navbar from "@/components/Navbar";
+import { enProjectCopy } from "@/locales/projectCopy";
 
 export default function Home() {
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
+
+  const localizeProjects = (projects: Project[]) =>
+    projects.map((project) => {
+      const copy = lang === "en" ? enProjectCopy[project.id] : undefined;
+      return copy ? { ...project, ...copy } : project;
+    });
 
   // Mock data for the sections
   const datasComemorativas: Project[] = [
@@ -18,7 +24,7 @@ export default function Home() {
       image: "/images/halloween.png", 
       description: (
         <>
-          <p><strong>Conceito:</strong> Fuga do clichê comemorativo. O objetivo foi aproveitar a estética da data para engajar o público com o core business da marca (previdência), transformando a falta de planejamento financeiro no verdadeiro "monstro" a ser evitado.</p>
+          <p><strong>Conceito:</strong> Fuga do clichê comemorativo. O objetivo foi aproveitar a estética da data para engajar o público com o core business da marca (previdência), transformando a falta de planejamento financeiro no verdadeiro &quot;monstro&quot; a ser evitado.</p>
         </>
       ) 
     },
@@ -145,7 +151,7 @@ export default function Home() {
         <>
           <p><strong>Softwares utilizados:</strong> After Effects, Photoshop, FL Studio e Magic Bullet Looks.</p>
           <p><strong>O Projeto:</strong> Um estudo de ritmo e intensidade emocional. O objetivo desta peça foi traduzir o caos, a ansiedade e a sobrecarga sensorial que marcam a estética do filme, fugindo de abordagens tradicionais e apostando em uma montagem de alta energia.</p>
-          <p><strong>Processo Criativo & Sound Design:</strong> A trilha não é incidental, mas a espinha dorsal da narrativa. Para criar a atmosfera exata, produzi um mashup no FL Studio mesclando "Metro Spider" e "Cut Me Up". A escolha se alinha ao subtexto do filme: o álbum de Metro Boomin explora a dualidade entre heróis e vilões, enquanto a faixa de Wacotron aborda a imposição de respeito no próprio território, um paralelo direto com o arco de pertencimento de Miles Morales. A virada musical na edição marca a transição de uma ansiedade explosiva para uma angústia contemplativa.</p>
+          <p><strong>Processo Criativo & Sound Design:</strong> A trilha não é incidental, mas a espinha dorsal da narrativa. Para criar a atmosfera exata, produzi um mashup no FL Studio mesclando &quot;Metro Spider&quot; e &quot;Cut Me Up&quot;. A escolha se alinha ao subtexto do filme: o álbum de Metro Boomin explora a dualidade entre heróis e vilões, enquanto a faixa de Wacotron aborda a imposição de respeito no próprio território, um paralelo direto com o arco de pertencimento de Miles Morales. A virada musical na edição marca a transição de uma ansiedade explosiva para uma angústia contemplativa.</p>
           <p><strong>Execução Técnica:</strong> A identidade visual foi construída com um trabalho minucioso de masking, rotoscopia e motion tracking no After Effects, integrado a assets desenvolvidos no Photoshop, como os balões de diálogo com lyrics dinâmicos, texturas e substituição de fundos. O color grading buscou respeitar a paleta vibrante da animação original, ganhando peso através do Magic Bullet Looks. A fluidez dos cortes e keyframes gerou uma retenção orgânica de alto impacto, alcançando 57 mil visualizações, 9.700 curtidas e quase 1.000 salvamentos.</p>
         </>
       )
@@ -157,9 +163,9 @@ export default function Home() {
       description: (
         <>
           <p><strong>Softwares utilizados:</strong> After Effects, Photoshop e Magic Bullet Looks.</p>
-          <p><strong>O Projeto:</strong> Uma reflexão audiovisual sobre arrependimento e a dor de reconhecer o próprio erro no fim de um relacionamento. A escolha da faixa "Sparks" (Coldplay) se deu por um vídeo que viralizou na época da produção do vídeo, que mostrava a emoção do Chris Martin ao cantar essa música logo após terminar com Dakota Johnson. A canção dialoga diretamente com as escolhas dos protagonistas do filme.</p>
+          <p><strong>O Projeto:</strong> Uma reflexão audiovisual sobre arrependimento e a dor de reconhecer o próprio erro no fim de um relacionamento. A escolha da faixa &quot;Sparks&quot; (Coldplay) se deu por um vídeo que viralizou na época da produção do vídeo, que mostrava a emoção do Chris Martin ao cantar essa música logo após terminar com Dakota Johnson. A canção dialoga diretamente com as escolhas dos protagonistas do filme.</p>
           <p><strong>Processo Criativo & Sound Design:</strong> A cinematografia original de La La Land é irretocável, e em vez de alterar o color grading, o trabalho visual focou em adicionar difusão de luz e vinhetas de desfoque, simulando o efeito óptico de um filtro Black Mist para construir uma atmosfera de sonho e memória (dreamy look). O verdadeiro motor da edição é o sound design, onde os cortes e ações do filme foram sincronizados com a cadência da música.</p>
-          <p><strong>Execução Técnica:</strong> A imersão do espectador foi aprofundada através de motion tracking e masking, permitindo que as legendas interagissem volumetricamente com a cena, ora sobrepondo, ora se escondendo atrás de objetos. Para o clímax do refrão, desenvolvi uma animação com textura grunge (mesclando Photoshop e After Effects) para simbolizar os "sparks". A peça gerou grande identificação orgânica, resultando em 1.802 visualizações e excelente taxa de salvamentos e compartilhamentos.</p>
+          <p><strong>Execução Técnica:</strong> A imersão do espectador foi aprofundada através de motion tracking e masking, permitindo que as legendas interagissem volumetricamente com a cena, ora sobrepondo, ora se escondendo atrás de objetos. Para o clímax do refrão, desenvolvi uma animação com textura grunge (mesclando Photoshop e After Effects) para simbolizar os &quot;sparks&quot;. A peça gerou grande identificação orgânica, resultando em 1.802 visualizações e excelente taxa de salvamentos e compartilhamentos.</p>
         </>
       )
     },
@@ -171,7 +177,7 @@ export default function Home() {
       description: (
         <>
           <p><strong>Softwares utilizados:</strong> Photoshop e After Effects.</p>
-          <p><strong>O Projeto:</strong> Um experimento técnico em motion graphics e animação 2D. O desafio foi dar vida e fluidez a quatro painéis estáticos de mangá, utilizando o diálogo irônico da música "Hit the Road Jack" para ilustrar a dinâmica unilateral e muitas vezes cômica entre os personagens Sasuke e Sakura.</p>
+          <p><strong>O Projeto:</strong> Um experimento técnico em motion graphics e animação 2D. O desafio foi dar vida e fluidez a quatro painéis estáticos de mangá, utilizando o diálogo irônico da música &quot;Hit the Road Jack&quot; para ilustrar a dinâmica unilateral e muitas vezes cômica entre os personagens Sasuke e Sakura.</p>
           <p><strong>Processo Criativo & Rigging:</strong> O projeto exigiu uma pré-produção minuciosa de assets. No Photoshop, cada painel foi desmembrado: fundos foram separados, fios de cabelo recortados individualmente e os cenários ou fundos de cabeça precisaram ser redesenhados digitalmente para garantir que não houvesse falhas visuais durante o movimento (clean plating).</p>
           <p><strong>Execução Técnica:</strong> A animação tomou forma no After Effects. Expressões, olhos e movimentos corporais foram animados manualmente via Puppet Tool, enquanto o movimento orgânico do cabelo foi construído com scripts de Hair Rig. A cereja do bolo é o senso extremo de profundidade 3D (efeito parallax): utilizando câmeras 3D e Null Objects, a navegação da cena passa por pedras no primeiro plano que entram e saem de desfoque. A paleta foi aquecida e lens flares foram adicionados para simular luz solar agressiva. O engajamento foi de: 9.200 visualizações, 411 curtidas, 111 salvamentos e 25 compartilhamentos.</p>
         </>
@@ -185,7 +191,7 @@ export default function Home() {
         <>
           <p><strong>Softwares utilizados:</strong> After Effects e Magic Bullet Looks.</p>
           <p><strong>O Projeto:</strong> Uma peça conceitual e mais crua, sobre a incapacidade de alcançar as próprias expectativas. O foco não era a complexidade de cortes rápidos, mas sim a construção de uma atmosfera psicológica pesada, revelando a figura de Tyler Durden exatamente pelo que ele é: uma ilusão sintomática da mente do protagonista.</p>
-          <p><strong>Processo Criativo & Execução Técnica:</strong> Para reforçar a sensação de irrealidade, o tratamento de cor e luz abusou da difusão, mantendo a estética onírica (dreamy) para isolar o personagem principal de seu ambiente. A estabilidade visual é quebrada propositalmente durante o refrão da faixa "Creep", utilizando motion tracking alinhado a efeitos de glitch desenhados para simbolizar a ruptura mental e a falha na projeção de identidade. Mesmo sendo uma peça mais densa e conceitual, a narrativa visual capturou a atenção de 1.185 espectadores.</p>
+          <p><strong>Processo Criativo & Execução Técnica:</strong> Para reforçar a sensação de irrealidade, o tratamento de cor e luz abusou da difusão, mantendo a estética onírica (dreamy) para isolar o personagem principal de seu ambiente. A estabilidade visual é quebrada propositalmente durante o refrão da faixa &quot;Creep&quot;, utilizando motion tracking alinhado a efeitos de glitch desenhados para simbolizar a ruptura mental e a falha na projeção de identidade. Mesmo sendo uma peça mais densa e conceitual, a narrativa visual capturou a atenção de 1.185 espectadores.</p>
         </>
       )
     }
@@ -195,7 +201,7 @@ export default function Home() {
     <>
       {t.sections.projetosAutoraisIntro}<br/><br/>
       {t.sections.projetosAutoraisIntro2}{" "}
-      <a href="http://tiktok.com/@zacc.an" target="_blank" className="text-purple-400 underline">@zacc.an</a>.{" "}
+      <a href="https://tiktok.com/@zacc.an" target="_blank" rel="noreferrer" className="text-lime-300 underline underline-offset-4">@zacc.an</a>.{" "}
       {t.sections.projetosAutoraisIntro3}
     </>
   );
@@ -203,7 +209,6 @@ export default function Home() {
   return (
     <main className="min-h-screen text-[#f3f4f6] relative z-[1]">
       <Navbar />
-      <LanguageToggle />
       <section id="hero" className="scroll-mt-20">
         <Hero />
       </section>
@@ -216,15 +221,15 @@ export default function Home() {
         </div>
         
         <section id="datas-comemorativas" className="scroll-mt-20">
-          <PortfolioSection title={t.sections.datasComemorativas} projects={datasComemorativas} />
+          <PortfolioSection title={t.sections.datasComemorativas} projects={localizeProjects(datasComemorativas)} />
         </section>
         
         <section id="carrossel" className="scroll-mt-20">
-          <PortfolioSection title={t.sections.carrossel} projects={carrossel} />
+          <PortfolioSection title={t.sections.carrossel} projects={localizeProjects(carrossel)} />
         </section>
         
         <section id="videos" className="scroll-mt-20">
-          <PortfolioSection title={t.sections.videosEventos} projects={videos} />
+          <PortfolioSection title={t.sections.videosEventos} projects={localizeProjects(videos)} />
         </section>
       </div>
 
@@ -233,11 +238,10 @@ export default function Home() {
           <h2 className="text-zinc-500 uppercase tracking-widest font-semibold">{t.sections.projects}</h2>
           <p className="text-zinc-600 mt-2">{t.sections.projectsDesc}</p>
         </div>
-        <PortfolioSection title={t.sections.projetosAutorais} description={projetosPessoaisIntro} projects={projetosPessoais} />
+        <PortfolioSection title={t.sections.projetosAutorais} description={projetosPessoaisIntro} projects={localizeProjects(projetosPessoais)} />
       </section>
 
       <Contact />
     </main>
   );
 }
-

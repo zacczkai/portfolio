@@ -1,100 +1,83 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowDownRight } from "lucide-react";
+import { featuredProjects } from "@/data/projects";
+import { uiCopy } from "@/data/ui-copy";
 import { useLanguage } from "@/context/LanguageContext";
-import Image from "next/image";
-
-const stagger = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.12 } },
-};
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7 } },
-} as const;
-
-const universalTags = [
-  "After Effects", "Photoshop", "Premiere Pro",
-  "Motion Graphics", "Color Grading",
-  "Sound Design", "Branding",
-];
+import ProjectPreview from "@/components/ProjectPreview";
 
 export default function Hero() {
-  const { t } = useLanguage();
-
-  const tags = [...universalTags, t.tags.artDirection];
+  const { lang } = useLanguage();
+  const copy = uiCopy[lang].hero;
+  const reduceMotion = Boolean(useReducedMotion());
+  const heroProject = featuredProjects[0];
 
   return (
-    <section className="relative min-h-[90vh] flex items-center px-4 py-24 overflow-hidden">
+    <section id="hero" className="relative min-h-svh overflow-hidden bg-black">
+      <div className="absolute inset-x-0 top-16 aspect-video lg:inset-0 lg:aspect-auto">
+        <ProjectPreview
+          project={heroProject}
+          language={lang}
+          priority
+          width={2560}
+          sizes="100vw"
+          label={`${uiCopy[lang].featured.open}: ${heroProject.copy[lang].title}`}
+          className="h-full w-full"
+          fit="contain"
+          backdrop
+        />
+      </div>
+
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,#050505_0%,rgba(5,5,5,.9)_24%,rgba(5,5,5,.28)_64%,rgba(5,5,5,.12)_100%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(0deg,#050505_0%,transparent_42%,rgba(5,5,5,.22)_100%)]" />
 
       <motion.div
-        variants={stagger}
-        initial="hidden"
-        animate="show"
-        className="max-w-5xl mx-auto w-full grid md:grid-cols-[1.2fr_1fr] gap-12 items-center"
+        initial={reduceMotion ? false : "hidden"}
+        animate="visible"
+        variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1, delayChildren: 0.18 } } }}
+        className="relative z-10 mx-auto flex min-h-svh w-full max-w-[1600px] flex-col justify-end px-5 pb-12 pt-28 sm:px-8 lg:justify-center lg:px-12 lg:pb-20 xl:px-16"
       >
-        {/* Left: Text */}
-        <div>
-          <motion.p variants={fadeUp} className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-lime-300">
-            {t.hero.subtitle}
-          </motion.p>
-
-          <motion.h1 variants={fadeUp} className="text-4xl md:text-6xl font-bold tracking-tight leading-[1.1] mb-6">
-            {t.hero.line1}{" "}
-            <span className="text-lime-300">{t.hero.line2}</span>
-          </motion.h1>
-
-          <motion.p variants={fadeUp} className="text-gray-400 text-lg leading-relaxed max-w-lg mb-8">
-            {t.hero.description}
-          </motion.p>
-
-          <motion.div variants={fadeUp} className="mb-9 flex flex-wrap gap-3">
-            <a
-              href="#projetos"
-              className="inline-flex min-h-11 items-center justify-center rounded-full bg-lime-300 px-5 py-2.5 text-sm font-bold text-black transition-transform hover:-translate-y-0.5 hover:bg-lime-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-            >
-              {t.hero.workCta}
-            </a>
-            <a
-              href="#contato"
-              className="inline-flex min-h-11 items-center justify-center rounded-full border border-zinc-700 px-5 py-2.5 text-sm font-semibold text-zinc-200 transition-colors hover:border-lime-300/70 hover:text-lime-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-            >
-              {t.hero.contactCta}
-            </a>
-          </motion.div>
-
-          {/* Tags */}
-          <motion.div variants={fadeUp} className="flex flex-wrap gap-2">
-            {tags.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full border border-zinc-800 bg-zinc-900 px-3 py-1.5 text-xs text-zinc-400 transition-colors hover:border-lime-300/50 hover:text-lime-200"
-              >
-                {tag}
-              </span>
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Right: Photo placeholder */}
-        <motion.div
-          variants={fadeUp}
-          className="relative h-[300px] overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900 group md:h-[480px] flex items-center justify-center"
+        <motion.p
+          variants={{ hidden: { opacity: 0, y: 14 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
+          className="mb-5 max-w-xl text-xs font-semibold uppercase tracking-[0.2em] text-lime-300 sm:text-sm"
         >
-          <Image
-            src="/images/minha foto.jpeg" 
-            alt={t.hero.photoAlt}
-            fill
-            priority
-            sizes="(max-width: 768px) 100vw, 40vw"
-            className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
-          />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-lime-300/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-          <div className="absolute bottom-5 left-5 right-5 rounded-lg border border-white/15 bg-black/60 px-4 py-3 backdrop-blur-sm">
-            <p className="text-sm font-semibold text-white">Enzo Guerreiro</p>
-            <p className="mt-1 text-xs text-zinc-300">{t.hero.photoCaption}</p>
+          {copy.eyebrow}
+        </motion.p>
+        <motion.h1
+          variants={{ hidden: { opacity: 0, y: 38 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } } }}
+          className="max-w-[11ch] text-balance text-[clamp(3.25rem,7vw,6rem)] font-semibold leading-[0.86] tracking-[-0.04em] text-white"
+        >
+          {copy.title}
+        </motion.h1>
+        <motion.div
+          variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.55 } } }}
+          className="mt-8 flex max-w-3xl flex-col gap-7 lg:mt-10"
+        >
+          <p className="max-w-md text-pretty text-base leading-relaxed text-zinc-200 sm:text-lg">{copy.description}</p>
+          <div className="flex flex-wrap gap-6">
+            <a
+              href="#trabalhos"
+              className="inline-flex min-h-12 w-fit items-center gap-3 border-b border-lime-300 pb-2 text-sm font-semibold uppercase tracking-[0.1em] text-lime-300 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300 focus-visible:ring-offset-4 focus-visible:ring-offset-black"
+            >
+              {copy.workCta}
+              <ArrowDownRight className="h-4 w-4" aria-hidden="true" />
+            </a>
+            <a
+              href="#design"
+              className="inline-flex min-h-12 w-fit items-center gap-3 border-b border-white/60 pb-2 text-sm font-semibold uppercase tracking-[0.1em] text-white transition-colors hover:border-lime-300 hover:text-lime-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300 focus-visible:ring-offset-4 focus-visible:ring-offset-black"
+            >
+              {copy.designCta}
+              <ArrowDownRight className="h-4 w-4" aria-hidden="true" />
+            </a>
           </div>
+        </motion.div>
+        <motion.div
+          variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.8, delay: 0.2 } } }}
+          className="mt-12 flex items-center gap-3 text-xs uppercase tracking-[0.16em] text-zinc-300 lg:absolute lg:bottom-8 lg:right-12 lg:mt-0 xl:right-16"
+        >
+          <span className="h-2 w-2 rounded-full bg-lime-300 shadow-[0_0_14px_rgba(215,255,79,.75)]" />
+          {copy.availability}
         </motion.div>
       </motion.div>
     </section>

@@ -1,10 +1,13 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Anek_Latin, Geist_Mono } from "next/font/google";
+import { LanguageProvider } from "@/context/LanguageContext";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const anek = Anek_Latin({
+  variable: "--font-anek",
   subsets: ["latin"],
+  weight: "variable",
+  axes: ["wdth"],
 });
 
 const geistMono = Geist_Mono({
@@ -12,36 +15,36 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-import { LanguageProvider } from "@/context/LanguageContext";
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#050505",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.enzoguerreiro.com.br"),
-  title: "Enzo Guerreiro | Publicidade, Design e Motion Graphics",
-  description: "Portfólio autoral de Enzo Guerreiro, explorando direção de arte, motion graphics, edição, sound design e color grading.",
+  title: "Enzo Guerreiro | Motion & Direção de Arte",
+  description: "Portfólio de Enzo Guerreiro: direção de arte, motion graphics, edição, sound design e design institucional.",
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Enzo Guerreiro | Publicidade, Design e Motion Graphics",
-    description: "Portfólio autoral de Enzo Guerreiro.",
-    url: "https://www.enzoguerreiro.com.br/",
+    title: "Enzo Guerreiro | Motion & Direção de Arte",
+    description: "Direção de arte, edição e motion para histórias que precisam ser sentidas antes de serem explicadas.",
+    url: "/",
     siteName: "Enzo Guerreiro",
     locale: "pt_BR",
     type: "website",
   },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="pt" className={`${anek.variable} ${geistMono.variable}`}>
+      <head>
+        <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="anonymous" />
+      </head>
       <body className="antialiased">
-        <LanguageProvider>
-        <div className="relative">
-          {children}
-        </div>
-      </LanguageProvider>
+        <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>
   );

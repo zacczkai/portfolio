@@ -1,79 +1,32 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Mail } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
+import { uiCopy } from "@/data/ui-copy";
 import { useLanguage } from "@/context/LanguageContext";
 
-const LinkedinIcon = ({ className }: { className?: string }) => (
-  <svg
-    className={className}
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-    <rect x="2" y="9" width="4" height="12"></rect>
-    <circle cx="4" cy="4" r="2"></circle>
-  </svg>
-);
-
-const BehanceIcon = ({ className }: { className?: string }) => (
-  <svg
-    className={className}
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-  >
-    <path d="M22 7h-7v2h7V7zm1.72 6.51c0-2.31-1.29-4.22-3.87-4.22-2.36 0-3.88 1.95-3.88 4.3 0 2.45 1.54 4.3 4.14 4.3 1.95 0 3.32-.93 3.8-2.58h-1.92c-.22.65-.91 1.05-1.78 1.05-1.07 0-1.83-.69-1.93-1.84h5.41c.01-.27.03-.61.03-1.01zm-3.81-1.28c.84 0 1.55.51 1.77 1.28h-3.66c.21-.76.93-1.28 1.89-1.28zM8.88 7H0v13h9.12c3.48 0 5.48-1.52 5.48-4.14 0-1.78-1.07-3.03-2.61-3.48v-.11c1.23-.39 2.05-1.52 2.05-3 0-2.3-1.63-3.6-5.16-3.6zm-1.04 7.62H3v3.74h4.74c1.33 0 2.21-.55 2.21-1.87 0-1.39-.93-1.87-2.11-1.87zm-.59-4.96H3v3.13h4.25c1.17 0 1.95-.51 1.95-1.61 0-1.12-.76-1.52-1.95-1.52z" />
-  </svg>
-);
-
 export default function Contact() {
-  const { t } = useLanguage();
+  const { lang } = useLanguage();
+  const copy = uiCopy[lang].contact;
 
   return (
-    <footer id="contato" className="py-24 px-4 border-t border-zinc-900 relative overflow-hidden">
-      <div className="absolute left-1/2 top-0 h-px w-full -translate-x-1/2 bg-gradient-to-r from-transparent via-lime-300/40 to-transparent" />
-      
-      <div className="max-w-4xl mx-auto text-center relative z-10">
-        <motion.h2 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-3xl md:text-5xl font-bold mb-8"
+    <footer id="contato" className="scroll-mt-16 border-t border-white/10 bg-lime-300 text-black">
+      <div className="mx-auto max-w-[1600px] px-5 py-20 sm:px-8 sm:py-28 lg:px-12 xl:px-16">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em]">{copy.label}</p>
+        <h2 className="mt-5 max-w-[14ch] text-balance text-[clamp(3.2rem,7vw,6rem)] font-semibold leading-[0.88] tracking-[-0.04em]">{copy.title}</h2>
+        <a
+          href="mailto:enzoguerreiro05@gmail.com"
+          className="mt-10 inline-flex min-h-14 items-center gap-4 border-b-2 border-black pb-2 text-lg font-semibold uppercase tracking-[0.1em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-4 focus-visible:ring-offset-lime-300"
         >
-          {t.contact.title1} <span className="text-lime-300">{t.contact.title2}</span>
-        </motion.h2>
-        
-        <motion.div 
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-          className="flex justify-center gap-6"
-        >
-          <a aria-label={t.contact.emailLabel} href="mailto:enzoguerreiro05@gmail.com" className="inline-flex min-h-14 min-w-14 items-center justify-center rounded-full bg-zinc-900 transition-colors hover:bg-lime-300/10 hover:text-lime-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300 focus-visible:ring-offset-2 focus-visible:ring-offset-black">
-            <Mail className="w-6 h-6" />
-          </a>
-          <a aria-label={t.contact.linkedinLabel} href="https://www.linkedin.com/in/enzo-guerreiro-568a4b233/" target="_blank" rel="noreferrer" className="inline-flex min-h-14 min-w-14 items-center justify-center rounded-full bg-zinc-900 transition-colors hover:bg-lime-300/10 hover:text-lime-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300 focus-visible:ring-offset-2 focus-visible:ring-offset-black">
-            <LinkedinIcon className="w-6 h-6" />
-          </a>
-          <a aria-label={t.contact.behanceLabel} href="https://behance.net/raajzkai" target="_blank" rel="noreferrer" className="inline-flex min-h-14 min-w-14 items-center justify-center rounded-full bg-zinc-900 transition-colors hover:bg-lime-300/10 hover:text-lime-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300 focus-visible:ring-offset-2 focus-visible:ring-offset-black">
-            <BehanceIcon className="w-6 h-6" />
-          </a>
-        </motion.div>
-
-        <p className="mt-12 text-zinc-600 text-sm">
-          © {new Date().getFullYear()} Enzo Guerreiro. {t.contact.rights}
-        </p>
+          {copy.cta}<ArrowUpRight className="h-5 w-5" />
+        </a>
+        <div className="mt-20 flex flex-col gap-6 border-t border-black/25 pt-7 text-sm sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex gap-6 font-medium">
+            <a className="underline-offset-4 hover:underline" href="https://www.linkedin.com/in/enzo-guerreiro-568a4b233/" target="_blank" rel="noreferrer">LinkedIn</a>
+            <a className="underline-offset-4 hover:underline" href="https://behance.net/raajzkai" target="_blank" rel="noreferrer">Behance</a>
+            <a className="underline-offset-4 hover:underline" href="https://tiktok.com/@zacc.an" target="_blank" rel="noreferrer">TikTok</a>
+          </div>
+          <p>© {new Date().getFullYear()} Enzo Guerreiro. {copy.rights}</p>
+        </div>
       </div>
     </footer>
   );

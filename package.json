@@ -2,6 +2,7 @@
   "name": "portfolio",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -11,7 +12,6 @@
     "test:contracts": "node --test tests/*.test.mjs"
   },
   "dependencies": {
-    "embla-carousel-react": "8.6.0",
     "framer-motion": "13.1.1",
     "lucide-react": "1.33.0",
     "next": "16.3.1",

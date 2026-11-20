@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Anek_Latin, Geist_Mono } from "next/font/google";
 import { LanguageProvider } from "@/context/LanguageContext";
+import CustomCursor from "@/components/CustomCursor";
 import "./globals.css";
 
 const anek = Anek_Latin({
@@ -44,7 +45,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="anonymous" />
       </head>
       <body className="antialiased">
-        <LanguageProvider>{children}</LanguageProvider>
+        <LanguageProvider>
+          <CustomCursor />
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );

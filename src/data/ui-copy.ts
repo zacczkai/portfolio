@@ -44,9 +44,74 @@ export const uiCopy = {
     about: {
       label: "Sobre",
       title: "Estratégia no conceito. Precisão na execução.",
-      body: "Sou estudante de Publicidade e atuo entre design, audiovisual e estratégia. Gosto de transformar temas densos em mensagens claras — do primeiro frame ao acabamento de cor, ritmo e som.",
+      body: "Estudante de Publicidade e Propaganda com experiência em comunicação corporativa, design de interfaces e desenvolvimento de produtos digitais, unindo criatividade, dados e tecnologia para resolver problemas complexos e criar narrativas visuais eficientes.",
       capabilities: "Direção de arte · Motion graphics · Edição · Sound design · Color grading · Branding",
       photoAlt: "Retrato de Enzo Guerreiro",
+      tabs: {
+        bio: "Visão",
+        experience: "Trajetória",
+        skills: "Habilidades",
+      },
+      downloadCv: "Baixar Currículo (PDF)",
+      location: "Brasília, DF · Disponível para projetos remotos ou presenciais",
+      educationLabel: "Formação Acadêmica",
+      experienceLabel: "Experiência Profissional",
+      experiences: [
+        {
+          period: "2026 — Presente",
+          role: "Fundador",
+          company: "Alpha Investimentos",
+          description: "Desenvolvimento de ponta a ponta de produto digital fintech. Visão de negócios, ideação, branding, UX e aplicação prática de IA generativa em processos operacionais.",
+        },
+        {
+          period: "2025 — Presente",
+          role: "Estagiário de Comunicação",
+          company: "DF-PREVICOM",
+          description: "Planejamento mensal e anual, gestão de e-mail marketing, produção audiovisual para redes e suporte na captação de eventos corporativos.",
+        },
+        {
+          period: "2024 — 2025",
+          role: "Estagiário de Comunicação",
+          company: "Infraero Aeroportos",
+          description: "Gravação e edição de vídeos de endomarketing, videoaulas para universidade corporativa e criação de artes para comunicação interna.",
+        },
+        {
+          period: "2023 — 2025",
+          role: "Professor de Inglês",
+          company: "Wizard by Pearson",
+          description: "Planejamento e ministração de aulas de inglês presenciais e online.",
+        },
+      ],
+      education: [
+        {
+          institution: "IDP",
+          course: "Publicidade e Propaganda",
+          status: "Cursando 6º semestre (Matutino)",
+        },
+        {
+          institution: "UnB",
+          course: "Estatística",
+          status: "Cursado de 2021 a 2023",
+        },
+      ],
+      skills: [
+        {
+          category: "Design & Audiovisual",
+          items: "Photoshop, Illustrator, Premiere Pro, After Effects, Figma",
+        },
+        {
+          category: "Inovação & Produtividade",
+          items: "Aplicação prática de IA Generativa (ChatGPT, Claude) em fluxos de trabalho",
+        },
+        {
+          category: "Marketing Estratégico",
+          items: "RD Station, CRM, Pacote Office, Trello",
+        },
+        {
+          category: "Idiomas",
+          items: "Inglês Avançado/Fluente (C2), Português (Nativo)",
+        },
+      ],
     },
     contact: {
       label: "Contato",
@@ -115,9 +180,74 @@ export const uiCopy = {
     about: {
       label: "About",
       title: "Strategy in the concept. Precision in the execution.",
-      body: "I study Advertising and work across design, audiovisual and strategy. I turn dense subjects into clear messages — from the first frame to the final pass of color, rhythm and sound.",
+      body: "Advertising student experienced in corporate communications, interface design and digital product development — combining creativity, data and technology to solve complex problems and create high-impact visual narratives.",
       capabilities: "Art direction · Motion graphics · Editing · Sound design · Color grading · Branding",
       photoAlt: "Portrait of Enzo Guerreiro",
+      tabs: {
+        bio: "Vision",
+        experience: "Experience",
+        skills: "Skills",
+      },
+      downloadCv: "Download Resume (PDF)",
+      location: "Brasília, Brazil · Available for remote and on-site projects",
+      educationLabel: "Academic Background",
+      experienceLabel: "Professional Experience",
+      experiences: [
+        {
+          period: "2026 — Present",
+          role: "Founder",
+          company: "Alpha Investimentos",
+          description: "End-to-end development of a fintech digital product. Business vision, ideation, branding, visual identity, UX design and practical AI workflow automation.",
+        },
+        {
+          period: "2025 — Present",
+          role: "Communications Intern",
+          company: "DF-PREVICOM",
+          description: "Communication planning, email marketing, audiovisual social media content and corporate event support.",
+        },
+        {
+          period: "2024 — 2025",
+          role: "Communications Intern",
+          company: "Infraero Aeroportos",
+          description: "Filming and editing internal marketing videos, corporate e-learning and internal communication visual assets.",
+        },
+        {
+          period: "2023 — 2025",
+          role: "English Teacher",
+          company: "Wizard by Pearson",
+          description: "Planning and teaching in-person and online English classes.",
+        },
+      ],
+      education: [
+        {
+          institution: "IDP",
+          course: "Advertising and Marketing",
+          status: "6th semester (Morning)",
+        },
+        {
+          institution: "UnB",
+          course: "Statistics",
+          status: "Attended 2021 to 2023",
+        },
+      ],
+      skills: [
+        {
+          category: "Design & Audiovisual",
+          items: "Photoshop, Illustrator, Premiere Pro, After Effects, Figma",
+        },
+        {
+          category: "Innovation & Productivity",
+          items: "Practical use of Generative AI (ChatGPT, Claude) in creative workflows",
+        },
+        {
+          category: "Strategic Marketing",
+          items: "RD Station, CRM, Office Suite, Trello",
+        },
+        {
+          category: "Languages",
+          items: "Fluent English (C2), Native Portuguese",
+        },
+      ],
     },
     contact: {
       label: "Contact",

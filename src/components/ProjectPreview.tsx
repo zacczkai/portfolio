@@ -208,6 +208,7 @@ export default function ProjectPreview({
       ref={frameRef}
       href={`/projetos/${project.slug}`}
       aria-label={label ?? copy.title}
+      data-cursor={project.media.kind === "video" ? "PLAY" : language === "pt" ? "VER" : "VIEW"}
       onPointerEnter={activate}
       onPointerLeave={deactivate}
       onFocus={activate}

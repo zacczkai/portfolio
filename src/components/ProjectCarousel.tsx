@@ -51,6 +51,7 @@ export default function ProjectCarousel({
       role="region"
       aria-label={title}
       aria-roledescription={language === "pt" ? "carrossel" : "carousel"}
+      data-cursor={language === "pt" ? "ARRASTAR" : "DRAG"}
       className={`relative ${className}`}
     >
       <div

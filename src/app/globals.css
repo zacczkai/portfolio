@@ -1,15 +1,31 @@
 @import "tailwindcss";
 
+@property --grade {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #f1eee6;
+}
+
 :root {
-  --background: #050505;
-  --foreground: #f5f5f0;
-  --accent: #d7ff4f;
+  --sala: #000000;
+  --projetor: #f1eee6;
+  --penumbra: #8c8a84;
+  --mesa: #e8ebee;
+  --grade: var(--projetor);
+  --background: var(--sala);
+  --foreground: var(--projetor);
+  --accent: var(--grade);
   --stage-gutter: clamp(1.25rem, 2.5vw, 4rem);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-sala: var(--sala);
+  --color-projetor: var(--projetor);
+  --color-penumbra: var(--penumbra);
+  --color-mesa: var(--mesa);
+  --color-grade: var(--grade);
   --font-sans: var(--font-anek);
   --font-mono: var(--font-geist-mono);
 }
@@ -43,6 +59,62 @@ body {
   aspect-ratio: 9 / 16;
 }
 
+.case-media-artwork {
+  width: min(calc(100vw - 2 * var(--stage-gutter)), calc((100svh - 9rem) * 4 / 5), 960px);
+  aspect-ratio: 4 / 5;
+}
+
+.type-display {
+  font-stretch: 75%;
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.005em;
+}
+
+.vertical-cut {
+  width: 100%;
+}
+
+.vertical-cut-media {
+  width: min(100%, calc((100svh - 7rem) * 9 / 16));
+}
+
+@media (max-width: 1023px) {
+  html {
+    scroll-snap-type: y proximity;
+  }
+
+  .vertical-cut {
+    scroll-snap-align: start;
+  }
+
+  .vertical-cuts-intro {
+    scroll-snap-align: start;
+    scroll-margin-top: 5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .vertical-cut {
+    width: min(calc((100svh - 19rem) * 9 / 16), calc((100vw - 8rem) / 3), 24rem);
+  }
+
+  .vertical-cut-media {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1280px) {
+  .vertical-cut {
+    width: min(calc((100svh - 13rem) * 9 / 16), calc((min(100vw, 100rem) * 0.75 - 13rem) / 3), 24rem);
+  }
+}
+
+::view-transition-group(.morph) {
+  animation-duration: 450ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 .scrollbar-none {
   scrollbar-width: none;
 }
@@ -58,9 +130,104 @@ body {
   }
 }
 
+.reel {
+  --reel-caption: 8.75rem;
+  --reel-rail: 5.25rem;
+  --reel-console: calc(var(--reel-caption) + var(--reel-rail));
+  height: calc((var(--reel-takes) * 110 + 30) * 1svh);
+  transition: --grade 600ms ease;
+}
+
+@media (min-width: 1024px) {
+  .reel {
+    --reel-caption: 4.75rem;
+    --reel-rail: 5.75rem;
+  }
+}
+
+.reel-name {
+  animation: reel-name-in 1400ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.reel-card {
+  animation: reel-card-out 700ms ease-in 2800ms both;
+}
+
+@keyframes reel-card-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-3%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reel-card {
+    animation: none !important;
+  }
+}
+
+.reel[data-static] .reel-card {
+  animation: none;
+}
+
+@keyframes reel-name-in {
+  from {
+    font-stretch: 125%;
+    transform: translateY(6%);
+  }
+
+  to {
+    font-stretch: 75%;
+    transform: translateY(0);
+  }
+}
+
+.reel[data-static] {
+  --reel-rail: 0px;
+  height: auto;
+}
+
+.reel[data-static] .reel-stage {
+  position: relative;
+  height: auto;
+  overflow: visible;
+}
+
+.reel[data-static] .reel-take {
+  position: relative;
+  height: 100svh;
+  clip-path: none !important;
+}
+
+.reel[data-static] .reel-media {
+  transform: none !important;
+}
+
+.reel[data-static] .reel-detail {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.reel[data-static] .reel-opening {
+  position: relative;
+  height: 100svh;
+  padding-bottom: 2rem;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.reel[data-static] .reel-timeline {
+  display: none;
+}
+
 ::selection {
-  background: var(--accent);
-  color: #050505;
+  background: var(--projetor);
+  color: var(--sala);
 }
 
 ::-webkit-scrollbar {
@@ -68,22 +235,28 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #050505;
+  background: var(--sala);
 }
 
 ::-webkit-scrollbar-thumb {
-  border: 2px solid #050505;
+  border: 2px solid var(--sala);
   border-radius: 999px;
-  background: #66772c;
+  background: #3a3936;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent);
+  background: var(--projetor);
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 
   *,

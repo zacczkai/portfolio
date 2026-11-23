@@ -21,6 +21,17 @@ export const uiCopy = {
       availability: "Disponível para projetos e oportunidades",
       reelLabel: "Showreel selecionado",
     },
+    reel: {
+      role: "Motion e direção de arte",
+      view: "Ver projeto",
+      timeline: "Linha do tempo dos projetos",
+      goTo: "Ir para",
+    },
+    verticals: {
+      title: "Cortes verticais.",
+      description: "Três peças mostradas no formato de celular em que foram feitas.",
+      open: "Ver projeto",
+    },
     featured: {
       label: "Trabalhos selecionados",
       title: "Movimento como linguagem.",
@@ -32,20 +43,20 @@ export const uiCopy = {
       description: "Direção de arte, composição e narrativa editorial pensadas para a experiência real do feed.",
       carouselLabel: "Carrossel editorial",
       slideUnit: "lâminas",
-      staticLabel: "Peça estática",
+      staticTitle: "Peças estáticas, presença imediata.",
       open: "Abrir case",
     },
     archive: {
       label: "Arquivo",
-      title: "Outros trabalhos, o mesmo rigor.",
-      description: "Design institucional, conteúdo editorial e experimentos audiovisuais organizados sem ruído.",
+      title: "Todos os trabalhos.",
+      description: "Motion e design em um só índice.",
       open: "Ver case",
     },
     about: {
       label: "Sobre",
       title: "Estratégia no conceito. Precisão na execução.",
       body: "Estudante de Publicidade e Propaganda com experiência em comunicação corporativa, design de interfaces e desenvolvimento de produtos digitais, unindo criatividade, dados e tecnologia para resolver problemas complexos e criar narrativas visuais eficientes.",
-      capabilities: "Direção de arte · Motion graphics · Edição · Sound design · Color grading · Branding",
+      capabilities: "Direção de arte, motion graphics, edição, sound design, color grading e branding.",
       photoAlt: "Retrato de Enzo Guerreiro",
       tabs: {
         bio: "Visão",
@@ -53,7 +64,7 @@ export const uiCopy = {
         skills: "Habilidades",
       },
       downloadCv: "Baixar Currículo (PDF)",
-      location: "Brasília, DF · Disponível para projetos remotos ou presenciais",
+      location: "Brasília, DF. Disponível para projetos remotos ou presenciais.",
       educationLabel: "Formação Acadêmica",
       experienceLabel: "Experiência Profissional",
       experiences: [
@@ -157,6 +168,17 @@ export const uiCopy = {
       availability: "Available for projects and opportunities",
       reelLabel: "Selected showreel",
     },
+    reel: {
+      role: "Motion and art direction",
+      view: "View project",
+      timeline: "Project timeline",
+      goTo: "Go to",
+    },
+    verticals: {
+      title: "Vertical cuts.",
+      description: "Three pieces shown in the phone format they were made for.",
+      open: "View project",
+    },
     featured: {
       label: "Selected work",
       title: "Movement as a language.",
@@ -168,20 +190,20 @@ export const uiCopy = {
       description: "Art direction, composition and editorial narratives designed for the real feed experience.",
       carouselLabel: "Editorial carousel",
       slideUnit: "slides",
-      staticLabel: "Static artwork",
+      staticTitle: "Static work, immediate presence.",
       open: "Open case",
     },
     archive: {
       label: "Archive",
-      title: "Different formats, the same rigor.",
-      description: "Institutional design, editorial content and audiovisual experiments organized without noise.",
+      title: "All work.",
+      description: "Motion and design in a single index.",
       open: "View case",
     },
     about: {
       label: "About",
       title: "Strategy in the concept. Precision in the execution.",
       body: "Advertising student experienced in corporate communications, interface design and digital product development — combining creativity, data and technology to solve complex problems and create high-impact visual narratives.",
-      capabilities: "Art direction · Motion graphics · Editing · Sound design · Color grading · Branding",
+      capabilities: "Art direction, motion graphics, editing, sound design, color grading and branding.",
       photoAlt: "Portrait of Enzo Guerreiro",
       tabs: {
         bio: "Vision",
@@ -189,7 +211,7 @@ export const uiCopy = {
         skills: "Skills",
       },
       downloadCv: "Download Resume (PDF)",
-      location: "Brasília, Brazil · Available for remote and on-site projects",
+      location: "Brasília, Brazil. Available for remote and on-site projects.",
       educationLabel: "Academic Background",
       experienceLabel: "Professional Experience",
       experiences: [

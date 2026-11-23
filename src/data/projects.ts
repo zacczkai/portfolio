@@ -29,6 +29,7 @@ export type ProjectMedia =
       orientation: "landscape" | "portrait";
       aspectRatio: { width: number; height: number };
       preview: VideoPreviewWindow;
+      posterAt?: number;
     };
 
 export interface Project {
@@ -38,13 +39,17 @@ export interface Project {
   context: ProjectContext;
   year: string;
   homePlacement?: { section: HomeSection; order: number };
+  grade?: string;
+  highlight?: Record<Language, string>;
   roles: readonly string[];
   tools: readonly string[];
   copy: Record<Language, ProjectCopy>;
   media: ProjectMedia;
 }
 
-const image = (src: string, pt: string, en: string): ImageAsset => ({
+export type VideoProject = Project & { media: Extract<ProjectMedia, { kind: "video" }> };
+
+const image =(src: string, pt: string, en: string): ImageAsset => ({
   src,
   alt: { pt, en },
 });
@@ -52,6 +57,8 @@ const image = (src: string, pt: string, en: string): ImageAsset => ({
 export const projects: readonly Project[] = [
   {
     id: "pp1",
+    grade: "#F2D61F",
+    highlight: { pt: "57 mil visualizações", en: "57,000 views" },
     slug: "spider-verse-frenesi-dualidade",
     discipline: "motion",
     context: "authorial",
@@ -91,6 +98,7 @@ export const projects: readonly Project[] = [
   },
   {
     id: "vid1",
+    grade: "#6FC2CC",
     slug: "institucional-7-anos",
     discipline: "motion",
     context: "institutional",
@@ -101,7 +109,7 @@ export const projects: readonly Project[] = [
     copy: {
       pt: {
         title: "Institucional 7 Anos: Narrativa em Motion",
-        shortTitle: "Institucional 7 Anos",
+        shortTitle: "Institucional",
         summary: "Uma linha do tempo imersiva para quase uma década de história institucional.",
         description: [
           "O desafio era condensar quase uma década de história institucional sem perder a atenção do espectador.",
@@ -111,7 +119,7 @@ export const projects: readonly Project[] = [
       },
       en: {
         title: "7-Year Institutional Film: Motion Narrative",
-        shortTitle: "7-Year Film",
+        shortTitle: "Institutional",
         summary: "An immersive timeline for almost a decade of institutional history.",
         description: [
           "The challenge was to condense almost a decade of institutional history without losing the viewer halfway through.",
@@ -130,6 +138,7 @@ export const projects: readonly Project[] = [
   },
   {
     id: "pp2",
+    grade: "#D86CCB",
     slug: "la-la-land-estetica-melancolia",
     discipline: "motion",
     context: "authorial",
@@ -169,6 +178,7 @@ export const projects: readonly Project[] = [
   },
   {
     id: "pp3",
+    grade: "#E3C98F",
     slug: "naruto-manga-motion",
     discipline: "motion",
     context: "authorial",
@@ -207,6 +217,7 @@ export const projects: readonly Project[] = [
   },
   {
     id: "pp4",
+    grade: "#E5534B",
     slug: "fight-club-peso-projecao",
     discipline: "motion",
     context: "authorial",
@@ -245,6 +256,7 @@ export const projects: readonly Project[] = [
   },
   {
     id: "vid2",
+    grade: "#A1B8D5",
     slug: "workshop-df-previcom",
     discipline: "motion",
     context: "institutional",
@@ -314,6 +326,7 @@ export const projects: readonly Project[] = [
     media: {
       kind: "video",
       sourceUrl: "https://res.cloudinary.com/amh1rowo/video/upload/q_auto,f_mp4/v1787689778/V%C3%ADdeo_-_CLDF_CD_Itinerante.mp4",
+      posterAt: 4,
       orientation: "portrait",
       aspectRatio: { width: 9, height: 16 },
       preview: { start: 0, duration: 5 },
@@ -535,9 +548,25 @@ export const featuredProjects = projects
   .filter((project) => project.homePlacement?.section === "motion-featured")
   .sort((a, b) => (a.homePlacement?.order ?? 0) - (b.homePlacement?.order ?? 0));
 
+const isLandscapeVideo = (project: Project): project is VideoProject =>
+  project.media.kind === "video" && project.media.orientation === "landscape";
+
+export const reelProjects: readonly VideoProject[] = [
+  ...featuredProjects,
+  ...projects.filter((project) => !project.homePlacement),
+].filter(isLandscapeVideo);
+
+export const verticalProjects: readonly VideoProject[] = projects.filter(
+  (project): project is VideoProject => project.media.kind === "video" && project.media.orientation === "portrait",
+);
+
 export const designProjects = projects
   .filter((project) => project.homePlacement?.section === "design-showcase")
   .sort((a, b) => (a.homePlacement?.order ?? 0) - (b.homePlacement?.order ?? 0));
+
+export function getPosterTime(media: VideoProject["media"]) {
+  return media.posterAt ?? media.preview.start;
+}
 
 export function getProjectBySlug(slug: string) {
   return projects.find((project) => project.slug === slug);

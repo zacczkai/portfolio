@@ -2,14 +2,21 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useReducedMotion } from "framer-motion";
+import type { MotionValue } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { Project } from "@/data/projects";
-import { getCloudinaryPlaybackUrl, getCloudinaryPosterUrl, getResponsivePosterWidth } from "@/lib/cloudinary";
-import { canAutoplayPreview, getPreviewRecovery } from "@/lib/media-policy";
+import { getPosterTime, type Project } from "@/data/projects";
+import { getCloudinaryPosterUrl, getCloudinaryPreviewUrl, getResponsivePosterWidth } from "@/lib/cloudinary";
+import { getPreviewRecovery } from "@/lib/media-policy";
+import { useStaticMedia } from "@/hooks/useStaticMedia";
 import { useViewportWidth } from "@/hooks/useViewportWidth";
 
 const ACTIVE_PREVIEW_EVENT = "portfolio:preview-active";
+const MAX_PREVIEW_WIDTH = 1920;
+
+const FIT_CLASSES = {
+  cover: "object-cover",
+  contain: "object-contain",
+} as const;
 
 interface ProjectPreviewProps {
   project: Project;
@@ -19,13 +26,11 @@ interface ProjectPreviewProps {
   width?: number;
   priority?: boolean;
   label?: string;
-  fit?: "cover" | "contain";
+  fit?: keyof typeof FIT_CLASSES;
   backdrop?: boolean;
+  playing?: boolean;
+  time?: MotionValue<number>;
 }
-
-type NavigatorWithConnection = Navigator & {
-  connection?: { saveData?: boolean };
-};
 
 export default function ProjectPreview({
   project,
@@ -37,79 +42,85 @@ export default function ProjectPreview({
   label,
   fit = "cover",
   backdrop = false,
+  playing,
+  time,
 }: ProjectPreviewProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const frameRef = useRef<HTMLAnchorElement>(null);
   const retryTimerRef = useRef<number | undefined>(undefined);
-  const reducedMotion = Boolean(useReducedMotion());
-  const [saveData] = useState(() =>
-    typeof navigator === "undefined"
-      ? false
-      : Boolean((navigator as NavigatorWithConnection).connection?.saveData),
-  );
-  const [isActive, setIsActive] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const [shouldLoad, setShouldLoad] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [posterUnavailable, setPosterUnavailable] = useState(false);
   const [previewAttempt, setPreviewAttempt] = useState(1);
   const copy = project.copy[language];
-  const canMove = canAutoplayPreview({ reducedMotion, saveData });
+  const canMove = !useStaticMedia();
+  const isControlled = playing !== undefined;
+  const isVideo = project.media.kind === "video";
+  const isPlaying = canMove && isVideo && (isControlled ? playing : isHovered);
   const posterWidth = getResponsivePosterWidth(useViewportWidth(), width);
+  const previewStart = project.media.kind === "video" ? project.media.preview.start : 0;
+
+  if (isPlaying && !shouldLoad) setShouldLoad(true);
 
   const handlePreviewFailure = useCallback((failure: "media-error" | "play-rejected") => {
     const recovery = getPreviewRecovery(failure, previewAttempt);
-    if (recovery.kind !== "retry") {
-      setIsReady(false);
-      return;
-    }
-
     setIsReady(false);
+    if (recovery.kind !== "retry") return;
+
     window.clearTimeout(retryTimerRef.current);
     retryTimerRef.current = window.setTimeout(() => {
       setPreviewAttempt((attempt) => attempt + 1);
     }, recovery.delay);
   }, [previewAttempt]);
 
-  const deactivate = useCallback(() => {
-    setIsActive(false);
-    videoRef.current?.pause();
-  }, []);
-
+  const deactivate = useCallback(() => setIsHovered(false), []);
   const activate = useCallback(() => {
-    if (!canMove || project.media.kind !== "video") return;
-    if (hasError) {
-      setHasError(false);
-      setPreviewAttempt(1);
-    }
-    setShouldLoad(true);
-    setIsActive(true);
-    window.dispatchEvent(new CustomEvent(ACTIVE_PREVIEW_EVENT, { detail: project.id }));
-  }, [canMove, hasError, project.id, project.media.kind]);
+    if (canMove && isVideo) setIsHovered(true);
+  }, [canMove, isVideo]);
 
   useEffect(() => () => window.clearTimeout(retryTimerRef.current), []);
 
   useEffect(() => {
+    if (isControlled) return;
     const stopOtherPreview = (event: Event) => {
       if ((event as CustomEvent<string>).detail !== project.id) deactivate();
     };
     window.addEventListener(ACTIVE_PREVIEW_EVENT, stopOtherPreview);
     return () => window.removeEventListener(ACTIVE_PREVIEW_EVENT, stopOtherPreview);
-  }, [deactivate, project.id]);
+  }, [deactivate, isControlled, project.id]);
 
   useEffect(() => {
-    if (!isActive || !shouldLoad) return;
+    if (!shouldLoad || !videoRef.current) return;
+    if (!isPlaying) {
+      videoRef.current.pause();
+      return;
+    }
+
+    window.dispatchEvent(new CustomEvent(ACTIVE_PREVIEW_EVENT, { detail: project.id }));
     if (!isReady) videoRef.current?.load();
     videoRef.current?.play().catch((error: unknown) => {
       if (!(error instanceof DOMException && error.name === "AbortError")) {
         handlePreviewFailure("play-rejected");
       }
     });
-  }, [handlePreviewFailure, isActive, isReady, previewAttempt, shouldLoad]);
+  }, [handlePreviewFailure, isPlaying, isReady, previewAttempt, project.id, shouldLoad]);
+
+  useEffect(() => {
+    if (!time || !isPlaying) return;
+    let frame = 0;
+    const syncTime = () => {
+      time.set(previewStart + (videoRef.current?.currentTime ?? 0));
+      frame = requestAnimationFrame(syncTime);
+    };
+    frame = requestAnimationFrame(syncTime);
+    return () => cancelAnimationFrame(frame);
+  }, [isPlaying, previewStart, time]);
 
   useEffect(() => {
     const frame = frameRef.current;
-    if (!frame || !canMove || project.media.kind !== "video") return;
+    if (!frame || isControlled || !canMove || !isVideo) return;
 
     const touchLike = window.matchMedia("(hover: none)").matches;
     if (!touchLike) return;
@@ -123,14 +134,14 @@ export default function ProjectPreview({
     );
     observer.observe(frame);
     return () => observer.disconnect();
-  }, [activate, canMove, deactivate, project.media.kind]);
+  }, [activate, canMove, deactivate, isControlled, isVideo]);
 
   const visual = (() => {
     if (project.media.kind === "video") {
       const preview = project.media.preview;
-      const poster = getCloudinaryPosterUrl(project.media.sourceUrl, preview.start, posterWidth);
-      const playbackUrl = getCloudinaryPlaybackUrl(project.media.sourceUrl);
-      const fitClass = fit === "contain" ? "object-contain" : "object-cover";
+      const poster = getCloudinaryPosterUrl(project.media.sourceUrl, getPosterTime(project.media), posterWidth);
+      const previewUrl = getCloudinaryPreviewUrl(project.media.sourceUrl, preview, Math.min(posterWidth, MAX_PREVIEW_WIDTH));
+      const fitClass = FIT_CLASSES[fit];
       return (
         <>
           {backdrop && !posterUnavailable && (
@@ -140,7 +151,7 @@ export default function ProjectPreview({
               fill
               priority={priority}
               sizes={sizes}
-              className="scale-110 object-cover opacity-45 blur-2xl saturate-75"
+              className="scale-110 object-cover opacity-60 blur-2xl saturate-125"
             />
           )}
           {!posterUnavailable && (
@@ -150,7 +161,7 @@ export default function ProjectPreview({
               fill
               priority={priority}
               sizes={sizes}
-              className={`${fitClass} transition-opacity duration-500 ${isReady && isActive ? "opacity-0" : "opacity-100"}`}
+              className={`${fitClass} transition-opacity duration-500 ${isReady && isPlaying ? "opacity-0" : "opacity-100"}`}
               onError={() => setPosterUnavailable(true)}
             />
           )}
@@ -158,32 +169,20 @@ export default function ProjectPreview({
             <video
               key={previewAttempt}
               ref={videoRef}
+              src={previewUrl}
               muted
               loop
               playsInline
               preload="none"
               aria-hidden="true"
               poster={poster}
-              className={`absolute inset-0 h-full w-full ${fitClass} transition-opacity duration-500 ${isReady && isActive ? "opacity-100" : "opacity-0"}`}
-              onLoadedMetadata={(event) => {
-                const video = event.currentTarget;
-                if (Number.isFinite(video.duration) && video.duration > preview.start) {
-                  video.currentTime = preview.start;
-                }
-              }}
+              className={`absolute inset-0 h-full w-full ${fitClass} transition-opacity duration-500 ${isReady && isPlaying ? "opacity-100" : "opacity-0"}`}
               onCanPlay={() => {
                 setIsReady(true);
                 setHasError(false);
               }}
-              onTimeUpdate={(event) => {
-                const video = event.currentTarget;
-                const previewEnd = preview.start + preview.duration;
-                if (video.currentTime >= previewEnd) video.currentTime = preview.start;
-              }}
               onError={() => handlePreviewFailure("media-error")}
-            >
-              <source src={playbackUrl} type="video/mp4" />
-            </video>
+            />
           )}
         </>
       );
@@ -197,7 +196,7 @@ export default function ProjectPreview({
         fill
         priority={priority}
         sizes={sizes}
-        className={`${fit === "contain" ? "object-contain" : "object-cover"} transition-transform duration-700 group-hover:scale-[1.025]`}
+        className={`${FIT_CLASSES[fit]} transition-transform duration-700 group-hover:scale-[1.025]`}
         onError={() => setHasError(true)}
       />
     );
@@ -208,15 +207,17 @@ export default function ProjectPreview({
       ref={frameRef}
       href={`/projetos/${project.slug}`}
       aria-label={label ?? copy.title}
-      onPointerEnter={activate}
-      onPointerLeave={deactivate}
-      onFocus={activate}
-      onBlur={deactivate}
-      className={`group relative block overflow-hidden bg-[#11110f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300 focus-visible:ring-offset-4 focus-visible:ring-offset-black ${className}`}
+      aria-hidden={isControlled || undefined}
+      tabIndex={isControlled ? -1 : undefined}
+      onPointerEnter={isControlled ? undefined : activate}
+      onPointerLeave={isControlled ? undefined : deactivate}
+      onFocus={isControlled ? undefined : activate}
+      onBlur={isControlled ? undefined : deactivate}
+      className={`group relative block overflow-hidden bg-sala focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grade focus-visible:ring-offset-4 focus-visible:ring-offset-black ${className}`}
     >
       {visual}
       {hasError && (
-        <span className="absolute inset-0 grid place-items-center bg-[#11110f] px-6 text-center text-sm text-zinc-300">
+        <span className="absolute inset-0 grid place-items-center bg-sala px-6 text-center text-sm text-penumbra">
           {language === "pt" ? "Prévia indisponível" : "Preview unavailable"}
         </span>
       )}

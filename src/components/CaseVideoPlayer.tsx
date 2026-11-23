@@ -2,7 +2,7 @@
 
 import { RotateCw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import type { Language, Project } from "@/data/projects";
+import { getPosterTime, type Language, type Project } from "@/data/projects";
 import { uiCopy } from "@/data/ui-copy";
 import { getCloudinaryPlaybackUrl, getCloudinaryPosterUrl, getResponsivePosterWidth } from "@/lib/cloudinary";
 import { useViewportWidth } from "@/hooks/useViewportWidth";
@@ -43,7 +43,7 @@ export default function CaseVideoPlayer({ project, language, label }: CaseVideoP
 
   if (media.kind !== "video") return null;
   const copy = uiCopy[language].case;
-  const poster = getCloudinaryPosterUrl(media.sourceUrl, media.preview.start, posterWidth);
+  const poster = getCloudinaryPosterUrl(media.sourceUrl, getPosterTime(media), posterWidth);
 
   const retry = () => {
     setMetadataReady(false);
@@ -83,7 +83,7 @@ export default function CaseVideoPlayer({ project, language, label }: CaseVideoP
               <button
                 type="button"
                 onClick={retry}
-                className="mt-4 inline-flex min-h-11 items-center gap-2 border-b border-lime-300 text-sm font-semibold uppercase tracking-[0.08em] text-lime-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300"
+                className="mt-4 inline-flex min-h-11 items-center gap-2 border-b border-grade text-sm font-semibold text-grade focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grade"
               >
                 <RotateCw className="h-4 w-4" />{copy.retry}
               </button>

@@ -1,17 +1,17 @@
 import About from "@/components/About";
 import Contact from "@/components/Contact";
 import DesignShowcase from "@/components/DesignShowcase";
-import FeaturedProjects from "@/components/FeaturedProjects";
-import Hero from "@/components/Hero";
 import Navbar from "@/components/Navbar";
 import ProjectArchive from "@/components/ProjectArchive";
+import VerticalCuts from "@/components/VerticalCuts";
+import CinemaReel from "@/components/reel/CinemaReel";
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen bg-[#050505] text-[#f5f5f0]">
+    <main className="relative min-h-screen bg-sala text-projetor">
       <Navbar />
-      <Hero />
-      <FeaturedProjects />
+      <CinemaReel />
+      <VerticalCuts />
       <DesignShowcase />
       <ProjectArchive />
       <About />

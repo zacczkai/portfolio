@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CaseStudy from "@/components/CaseStudy";
-import { getAdjacentProjects, getProjectBySlug, projects } from "@/data/projects";
+import { getAdjacentProjects, getPosterTime, getProjectBySlug, projects } from "@/data/projects";
 import { getCloudinaryPosterUrl } from "@/lib/cloudinary";
 
 interface ProjectPageProps {
@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
   if (!project) return {};
   const copy = project.copy.pt;
   const image = project.media.kind === "video"
-    ? getCloudinaryPosterUrl(project.media.sourceUrl, project.media.preview.start, 1600)
+    ? getCloudinaryPosterUrl(project.media.sourceUrl, getPosterTime(project.media), 1600)
     : project.media.kind === "gallery"
       ? project.media.images[0].src
       : project.media.image.src;

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import LanguageToggle from "@/components/LanguageToggle";
@@ -15,9 +15,19 @@ export default function Navbar() {
   const copy = uiCopy[lang].nav;
   const [activeSection, setActiveSection] = useState("trabalhos");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isOverCuts, setIsOverCuts] = useState(false);
+  const [isScrollingDown, setIsScrollingDown] = useState(false);
+  const { scrollY } = useScroll();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const isHome = pathname === "/";
+  const isOverReel = isHome && activeSection === "trabalhos";
+  const hideOnPhone = isHome && isOverCuts && isScrollingDown && !isDrawerOpen;
+
+  useMotionValueEvent(scrollY, "change", (current) => {
+    const previous = scrollY.getPrevious() ?? current;
+    if (Math.abs(current - previous) > 2) setIsScrollingDown(current > previous);
+  });
 
   const links = useMemo(
     () => [
@@ -32,15 +42,17 @@ export default function Navbar() {
 
   useEffect(() => {
     if (!isHome) return;
-    const sections = links
-      .map((link) => document.getElementById(link.id))
+    const sections = [...links.map((link) => link.id), "verticais"]
+      .map((id) => document.getElementById(id))
       .filter((section): section is HTMLElement => Boolean(section));
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries
           .filter((entry) => entry.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible?.target.id) setActiveSection(visible.target.id);
+        if (!visible?.target.id) return;
+        setIsOverCuts(visible.target.id === "verticais");
+        setActiveSection(visible.target.id === "verticais" ? "trabalhos" : visible.target.id);
       },
       { rootMargin: "-30% 0px -58%", threshold: [0, 0.15, 0.4] },
     );
@@ -100,11 +112,12 @@ export default function Navbar() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.45, ease: "easeOut" }}
         aria-label={copy.menu}
-        className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black/75 backdrop-blur-xl"
+        className={`fixed inset-x-0 top-0 z-50 bg-[linear-gradient(180deg,rgba(0,0,0,.82)_0%,rgba(0,0,0,.5)_62%,transparent_100%)] transition-[translate] duration-300 focus-within:translate-y-0 ${hideOnPhone ? "max-lg:-translate-y-full" : ""}`}
       >
+        <span aria-hidden="true" className={`absolute inset-0 -z-10 bg-sala transition-opacity duration-300 ${isOverReel ? "opacity-0" : "opacity-100"}`} />
         <div className="mx-auto flex h-16 max-w-[1920px] items-center justify-between px-5 sm:px-8 lg:px-12 xl:px-16">
-          <Link href="/" className="text-base font-semibold uppercase tracking-[-0.02em] text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300">
-            Enzo Guerreiro<span className="text-lime-300">.</span>
+          <Link href="/" className="text-base font-semibold uppercase tracking-[-0.02em] text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grade">
+            Enzo Guerreiro
           </Link>
           <div className="hidden items-center gap-8 min-[1120px]:flex">
             <ul className="flex items-center gap-6 xl:gap-8">
@@ -113,7 +126,7 @@ export default function Navbar() {
                   <a
                     href={hrefFor(link.id)}
                     aria-current={isHome && activeSection === link.id ? "page" : undefined}
-                    className={`inline-flex min-h-11 items-center border-b text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300 ${isHome && activeSection === link.id ? "border-lime-300 text-white" : "border-transparent text-zinc-300 hover:text-white"}`}
+                    className={`inline-flex min-h-11 items-center border-b text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grade ${isHome && activeSection === link.id ? "border-projetor text-white" : "border-transparent text-projetor/75 hover:text-white"}`}
                   >
                     {link.label}
                   </a>
@@ -130,7 +143,7 @@ export default function Navbar() {
               aria-expanded={isDrawerOpen}
               aria-controls="mobile-menu"
               onClick={() => setIsDrawerOpen((open) => !open)}
-              className="inline-flex h-11 w-11 items-center justify-center text-white transition-colors hover:text-lime-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300"
+              className="inline-flex h-11 w-11 items-center justify-center text-white transition-colors hover:text-grade focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grade"
             >
               {isDrawerOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
@@ -159,16 +172,16 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed inset-y-0 right-0 z-50 flex w-[min(25rem,92vw)] flex-col bg-[#0b0b0a] px-6 pb-8 pt-5 min-[1120px]:hidden"
+              className="fixed inset-y-0 right-0 z-50 flex w-[min(25rem,92vw)] flex-col bg-sala px-6 pb-8 pt-5 min-[1120px]:hidden"
             >
               <div className="flex h-12 items-center justify-between border-b border-white/10 pb-5">
-                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-300">{copy.menu}</span>
+                <span className="text-sm text-penumbra">{copy.menu}</span>
                 <button
                   ref={closeButtonRef}
                   type="button"
                   aria-label={copy.close}
                   onClick={closeDrawer}
-                  className="inline-flex h-11 w-11 items-center justify-center text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300"
+                  className="inline-flex h-11 w-11 items-center justify-center text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grade"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -179,15 +192,14 @@ export default function Navbar() {
                     <a
                       href={hrefFor(link.id)}
                       onClick={closeDrawer}
-                      className="flex min-h-20 items-center justify-between text-3xl font-medium tracking-[-0.04em] text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300"
+                      className="type-display flex min-h-20 items-center text-4xl text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grade"
                     >
                       {link.label}
-                      <span className="text-sm text-lime-300">0{index + 1}</span>
                     </a>
                   </motion.li>
                 ))}
               </ul>
-              <p className="text-xs uppercase tracking-[0.14em] text-zinc-400">Enzo Guerreiro © {new Date().getFullYear()}</p>
+              <p className="text-sm text-penumbra">Enzo Guerreiro © {new Date().getFullYear()}</p>
             </motion.div>
           </>
         )}
